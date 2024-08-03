@@ -1,0 +1,75 @@
+div.pay-agreement-box {
+    border: 1px solid blue;
+    padding: 5px;
+}
+
+div.pay-agreement-box-body {
+    position: relative;
+    height: 8.5em;
+    width: 100%;
+}
+
+div.pay-agreement-box-body div.pay-agreement-id {
+    position: absolute;
+    top: 0em;
+}
+div.pay-agreement-box-body div.pay-agreement-spender {
+    position: absolute;
+    left: 12em;
+    top: 0em;
+}
+div.pay-agreement-box-body div.pay-agreement-spender-descr {
+    position: absolute;
+    left: 12em;
+    top: 1.2em;
+}
+div.pay-agreement-box-body div.pay-agreement-spender-descr span {
+    font-size: 0.9em;
+}
+
+div.pay-agreement-box-body div.pay-agreement-owner {
+    position: absolute;
+    left: 12em;
+    top: 3em;
+}
+div.pay-agreement-box-body div.pay-agreement-owner-descr {
+    position: absolute;
+    left: 12em;
+    top: 4.2em;
+}
+div.pay-agreement-box-body div.pay-agreement-owner-descr span {
+    font-size: 0.9em;
+}
+
+div.pay-agreement-box-body div.pay-agreement-token-addr {
+    position: absolute;
+    left: 12em;
+    top: 6em;
+}
+
+div.pay-agreement-box-body div.pay-agreement-pay-agreement {
+    position: absolute;
+    left: 12em;
+    top: 7.2em;
+}
+
+div.pay-agreement-box-body div.pay-agreement-pay-agreement span {
+    font-size: 0.9em;
+}
+
+div.pay-agreement-box-body div.pay-agreement-chain-id {
+    position: absolute;
+    top: 1.5em;
+}
+
+div.pay-agreement-box-body div.pay-agreement-confirm-date {
+    position: absolute;
+    left: 0em;
+    top: 4em;
+    font-size: 0.9em;
+}
+
+div.pay-agreement-box-body div.pay-agreement-tx-id {
+    position: absolute;
+    top: 7em;
+}

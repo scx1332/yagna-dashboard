@@ -12,6 +12,8 @@ import BackendSettings from "./BackendSettings";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import Web3Status from "./Web3Status";
 import Invoices from "./Invoices";
+import PayAgreements from "./PayAgreements";
+import PayActivities from "./PayActivities";
 
 const Dashboard = () => {
     const config = useConfigOrNull();
@@ -36,7 +38,9 @@ const Dashboard = () => {
                     <div className="top-header-navigation">
                         <Link to="/">Main</Link>
                         <Link to="/invoices">Invoices</Link>
-                        <Link to="/backend_settings">Settings</Link>
+                        <Link to="/payAgreements">Pay Agreements</Link>
+                        <Link to="/payActivities">Pay Activities</Link>
+                        <Link to="/backendSettings">Settings</Link>
                     </div>
                 </div>
                 <div className="main-content">
@@ -62,7 +66,9 @@ const Dashboard = () => {
                             }
                         />
                         <Route path="invoices" element={<Invoices />} />
-                        <Route path="backend_settings" element={<BackendSettings />} />
+                        <Route path="payAgreements" element={<PayAgreements />} />
+                        <Route path="payActivities" element={<PayActivities />} />
+                        <Route path="backendSettings" element={<BackendSettings />} />
                     </Routes>
                 </div>
             </div>
