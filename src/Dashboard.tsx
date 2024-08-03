@@ -11,6 +11,7 @@ import Balance from "./Balance";
 import BackendSettings from "./BackendSettings";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import Web3Status from "./Web3Status";
+import Invoices from "./Invoices";
 
 const Dashboard = () => {
     const config = useConfigOrNull();
@@ -34,7 +35,7 @@ const Dashboard = () => {
                     <div className="top-header-title">Yagna Dashboard</div>
                     <div className="top-header-navigation">
                         <Link to="/">Main</Link>
-                        <Link to="/payments">Payment module</Link>
+                        <Link to="/invoices">Invoices</Link>
                         <Link to="/backend_settings">Settings</Link>
                     </div>
                 </div>
@@ -60,12 +61,7 @@ const Dashboard = () => {
                                 </div>
                             }
                         />
-                        <Route path="feed" element={<TransactionFeed />} />
-                        <Route path="accounts" element={<Accounts />} />
-                        <Route path="allowances" element={<Allowances />} />
-                        <Route path="balance/:account" element={<Balance />} />
-                        <Route path="web3status" element={<Web3Status />} />
-                        <Route path="design_allowance_box" element={<AllowanceBoxDesignTime />} />
+                        <Route path="invoices" element={<Invoices />} />
                         <Route path="backend_settings" element={<BackendSettings />} />
                     </Routes>
                 </div>
