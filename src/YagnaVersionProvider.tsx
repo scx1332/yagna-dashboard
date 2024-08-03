@@ -16,11 +16,11 @@ export const useConfig = () => {
     return value;
 };
 
-interface ConfigProviderProps {
+interface YagnaVersionProviderProps {
     children: React.ReactNode;
 }
 
-export const ConfigProvider = (props: ConfigProviderProps) => {
+export const YagnaVersionProvider = (props: YagnaVersionProviderProps) => {
     const [config, setConfig] = useState<PaymentDriverConfig | null | string>(null);
     const { backendSettings } = useContext(BackendSettingsContext);
 

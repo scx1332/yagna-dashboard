@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import "./Dashboard.css";
 
 import TransactionFeed from "./TransactionFeed";
-import { useConfigOrNull } from "./ConfigProvider";
+import { useConfigOrNull } from "./YagnaVersionProvider";
 import { Routes, Route, Link } from "react-router-dom";
 import Accounts from "./Accounts";
 import AllowanceBoxDesignTime from "./AllowanceBoxDesignTime";

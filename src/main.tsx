@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import Dashboard from "./Dashboard";
-import { ConfigProvider, FRONTEND_BASE, globalSetDefaultBackendUrl } from "./ConfigProvider";
+import { YagnaVersionProvider } from "./YagnaVersionProvider";
 import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import { BackendSettingsProvider } from "./BackendSettingsProvider";
@@ -20,13 +20,13 @@ interface FrontendConfig {
 root.render(
     <React.StrictMode>
         <BackendSettingsProvider>
-            <ConfigProvider>
+            <YagnaVersionProvider>
                 <BrowserRouter basename={"erc20/frontend"}>
                     <Routes>
                         <Route path="/*" element={<Dashboard />} />
                     </Routes>
                 </BrowserRouter>
-            </ConfigProvider>
+            </YagnaVersionProvider>
         </BackendSettingsProvider>
     </React.StrictMode>,
 );

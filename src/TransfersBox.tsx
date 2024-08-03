@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import "./TransfersBox.css";
 import TransferBox from "./TransferBox";
-import { useConfig } from "./ConfigProvider";
+import { useConfig } from "./YagnaVersionProvider";
 import TokenTransfer from "./model/TokenTransfer";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import { backendFetch } from "./common/BackendCall";
