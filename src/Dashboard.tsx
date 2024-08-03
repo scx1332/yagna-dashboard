@@ -16,7 +16,6 @@ const Dashboard = () => {
     const config = useConfigOrNull();
 
     const { backendSettings } = useContext(BackendSettingsContext);
-
     if (config == null) {
         return <div>Loading...</div>;
     }
@@ -32,14 +31,10 @@ const Dashboard = () => {
         <div>
             <div>
                 <div className="top-header">
-                    <div className="top-header-title">Erc20 Payments Driver Dashboard</div>
+                    <div className="top-header-title">Yagna Dashboard</div>
                     <div className="top-header-navigation">
                         <Link to="/">Main</Link>
-                        <Link to="/feed">Transaction feed</Link>
-                        <Link to="/accounts">Accounts</Link>
-                        <Link to="/allowances">Allowances</Link>
-                        <Link to="/balance/0x0000000600000006000000060000000600000006">Balance</Link>
-                        <Link to="/web3status">Web3</Link>
+                        <Link to="/payments">Payment module</Link>
                         <Link to="/backend_settings">Settings</Link>
                     </div>
                 </div>

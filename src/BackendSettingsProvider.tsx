@@ -1,5 +1,9 @@
 import React, { createContext, useCallback, useState } from "react";
-import { DEFAULT_BACKEND_URL } from "./ConfigProvider";
+export let DEFAULT_BACKEND_URL = "http://127.0.0.1:7465";
+export function globalSetDefaultBackendUrl(backendUrl: string) {
+    DEFAULT_BACKEND_URL = backendUrl;
+}
+
 import BackendSettings from "./common/BackendSettings";
 
 interface BackendSettingsContextType {
@@ -10,9 +14,9 @@ interface BackendSettingsContextType {
 
 export const BackendSettingsContext = createContext<BackendSettingsContextType>({
     backendSettings: {
-        backendUrl: "",
-        bearerToken: "",
-        enableBearerToken: false,
+        backendUrl: DEFAULT_BACKEND_URL,
+        bearerToken: "66iiOdkvV29",
+        enableBearerToken: true,
     },
     setBackendSettings: (backendSettings: BackendSettings) => {
         console.error(`setBackendSettings not implemented: ${backendSettings}`);
@@ -51,8 +55,8 @@ export const BackendSettingsProvider = (props: BackendSettingsProviderProps) => 
     const resetSettings = useCallback(() => {
         const newSettings = {
             backendUrl: DEFAULT_BACKEND_URL,
-            bearerToken: "",
-            enableBearerToken: false,
+            bearerToken: "66iiOdkvV29",
+            enableBearerToken: true,
         };
         setBackendSettings(newSettings);
     }, [setBackendSettings]);

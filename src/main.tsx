@@ -17,22 +17,16 @@ interface FrontendConfig {
     backendUrl: string;
 }
 
-fetch("/erc20/frontend/config.json").then((resp) => {
-    resp.json().then((config: FrontendConfig) => {
-        globalSetDefaultBackendUrl(config.backendUrl);
-
-        root.render(
-            <React.StrictMode>
-                <BackendSettingsProvider>
-                    <ConfigProvider>
-                        <BrowserRouter basename={FRONTEND_BASE}>
-                            <Routes>
-                                <Route path="/*" element={<Dashboard />} />
-                            </Routes>
-                        </BrowserRouter>
-                    </ConfigProvider>
-                </BackendSettingsProvider>
-            </React.StrictMode>,
-        );
-    });
-});
+root.render(
+    <React.StrictMode>
+        <BackendSettingsProvider>
+            <ConfigProvider>
+                <BrowserRouter basename={"erc20/frontend"}>
+                    <Routes>
+                        <Route path="/*" element={<Dashboard />} />
+                    </Routes>
+                </BrowserRouter>
+            </ConfigProvider>
+        </BackendSettingsProvider>
+    </React.StrictMode>,
+);

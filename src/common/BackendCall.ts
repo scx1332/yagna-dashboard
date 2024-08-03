@@ -11,6 +11,7 @@ export function backendFetch(backendSettings: BackendSettings, uri: string, para
     const method = params?.method ?? "GET";
     const body = params?.body;
 
+    console.log("Backend fetch: ", backendSettings, uri, params);
     let url = uri;
     if (uri.startsWith("/")) {
         if (backendSettings.backendUrl.endsWith("/")) {
