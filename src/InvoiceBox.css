@@ -1,0 +1,75 @@
+div.invoice-box {
+    border: 1px solid blue;
+    padding: 5px;
+}
+
+div.invoice-box-body {
+    position: relative;
+    height: 8.5em;
+    width: 100%;
+}
+
+div.invoice-box-body div.invoice-id {
+    position: absolute;
+    top: 0em;
+}
+div.invoice-box-body div.invoice-spender {
+    position: absolute;
+    left: 12em;
+    top: 0em;
+}
+div.invoice-box-body div.invoice-spender-descr {
+    position: absolute;
+    left: 12em;
+    top: 1.2em;
+}
+div.invoice-box-body div.invoice-spender-descr span {
+    font-size: 0.9em;
+}
+
+div.invoice-box-body div.invoice-owner {
+    position: absolute;
+    left: 12em;
+    top: 3em;
+}
+div.invoice-box-body div.invoice-owner-descr {
+    position: absolute;
+    left: 12em;
+    top: 4.2em;
+}
+div.invoice-box-body div.invoice-owner-descr span {
+    font-size: 0.9em;
+}
+
+div.invoice-box-body div.invoice-token-addr {
+    position: absolute;
+    left: 12em;
+    top: 6em;
+}
+
+div.invoice-box-body div.invoice-invoice {
+    position: absolute;
+    left: 12em;
+    top: 7.2em;
+}
+
+div.invoice-box-body div.invoice-invoice span {
+    font-size: 0.9em;
+}
+
+div.invoice-box-body div.invoice-chain-id {
+    position: absolute;
+    top: 1.5em;
+}
+
+div.invoice-box-body div.invoice-confirm-date {
+    position: absolute;
+    left: 0em;
+    top: 4em;
+    font-size: 0.9em;
+}
+
+div.invoice-box-body div.invoice-tx-id {
+    position: absolute;
+    top: 7em;
+}
