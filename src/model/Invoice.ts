@@ -1,17 +1,16 @@
 interface Invoice {
-    id: string;
-    ownerId: string;
-    role: string;
-    peerId: string;
-    payeeAddr: string;
-    payerAddr: string;
-    paymentPlatform: string;
-    timestamp: string;
-    agreementId: string;
-    activityIds: [string];
-    amount: string;
-    paymentDueDate: string;
-    status: string;
+    invoiceId: string;
+    issuerId: string;
+    "recipientId": string,
+    "payeeAddr": string,
+    "payerAddr": string,
+    "paymentPlatform": string,
+    "timestamp": string,
+    "agreementId": string,
+    "activityIds": string[],
+    "amount": string,
+    "paymentDueDate": string,
+    "status": string
 }
 
 export default Invoice;

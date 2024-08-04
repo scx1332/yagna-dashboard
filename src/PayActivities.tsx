@@ -18,7 +18,11 @@ const PayActivities = () => {
         const encodedTimestamp = encodeURIComponent(limitDate.toISOString());
         const response = await backendFetch(backendSettings, `/payment-api/v1/payActivities?afterTimestamp=${encodedTimestamp}`);
         const response_json = await response.json();
-        setPayActivities({"payActivities": response_json});
+        let activities = response_json;
+        activities = activities.sort((a: PayActivity, b: PayActivity) => {
+            return b.createdTs.localeCompare(a.createdTs);
+        });
+        setPayActivities({"payActivities": activities});
     }, []);
 
     function row(payActivity: PayActivity, i: number) {
