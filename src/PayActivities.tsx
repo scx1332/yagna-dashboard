@@ -13,7 +13,10 @@ const PayActivities = () => {
     const {backendSettings} = useContext(BackendSettingsContext);
 
     const loadPayActivities = useCallback(async () => {
-        const response = await backendFetch(backendSettings, "/payment-api/v1/payActivities");
+        const limitDate = new Date();
+        limitDate.setHours(limitDate.getHours() - 24);
+        const encodedTimestamp = encodeURIComponent(limitDate.toISOString());
+        const response = await backendFetch(backendSettings, `/payment-api/v1/payActivities?afterTimestamp=${encodedTimestamp}`);
         const response_json = await response.json();
         setPayActivities({"payActivities": response_json});
     }, []);
