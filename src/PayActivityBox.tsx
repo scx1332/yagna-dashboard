@@ -16,14 +16,14 @@ interface GetDebitNotesResponse {
 }
 
 const PayActivityBox = (props: PayActivityBoxProps) => {
-    const { backendSettings } = useContext(BackendSettingsContext);
+    const {backendSettings} = useContext(BackendSettingsContext);
 
     const [debitNotes, setDebitNotes] = React.useState<GetDebitNotesResponse | null>(null);
     const loadDebitNotes = useCallback(async () => {
         if (props.loadDebitNotes) {
             const response = await backendFetch(backendSettings, `/payment-api/v1/payActivity/${props.payActivity.id}/debitNotes`);
             const response_json = await response.json();
-            setDebitNotes({"debitNotes":response_json});
+            setDebitNotes({"debitNotes": response_json});
         }
     }, [props.loadDebitNotes]);
 

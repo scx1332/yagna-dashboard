@@ -3,7 +3,7 @@ import "./PayAgreementBox.css";
 import DateBox from "./DateBox";
 import ChainDetails from "./ChainDetails";
 import ContractDetails from "./ContractDetails";
-import { fromWei } from "./common/Web3Utils";
+import {fromWei} from "./common/Web3Utils";
 import PayAgreement from "./model/PayAgreement";
 import {parseEther} from "ethers/lib/utils";
 

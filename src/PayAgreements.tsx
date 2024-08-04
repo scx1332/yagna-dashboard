@@ -1,8 +1,8 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, {useCallback, useContext, useEffect} from "react";
 import PayAgreementBox from "./PayAgreementBox";
 import PayAgreement from "./model/PayAgreement";
-import { BackendSettingsContext } from "./BackendSettingsProvider";
-import { backendFetch } from "./common/BackendCall";
+import {BackendSettingsContext} from "./BackendSettingsProvider";
+import {backendFetch} from "./common/BackendCall";
 
 interface GetPayAgreementsResponse {
     payAgreements: PayAgreement[];
@@ -10,16 +10,16 @@ interface GetPayAgreementsResponse {
 
 const PayAgreements = () => {
     const [payAgreements, setPayAgreements] = React.useState<GetPayAgreementsResponse | null>(null);
-    const { backendSettings } = useContext(BackendSettingsContext);
+    const {backendSettings} = useContext(BackendSettingsContext);
 
     const loadPayAgreements = useCallback(async () => {
         const response = await backendFetch(backendSettings, "/payment-api/v1/payAgreements");
         const response_json = await response.json();
-        setPayAgreements({"payAgreements":response_json});
+        setPayAgreements({"payAgreements": response_json});
     }, []);
 
     function row(payAgreement: PayAgreement, i: number) {
-        return <PayAgreementBox key={i} payAgreement={payAgreement} />;
+        return <PayAgreementBox key={i} payAgreement={payAgreement}/>;
     }
 
     useEffect(() => {
