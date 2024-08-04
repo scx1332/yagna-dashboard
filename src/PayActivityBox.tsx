@@ -31,31 +31,66 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
         loadDebitNotes().then();
     }, [loadDebitNotes]);
 
-    const amount = parseEther(props.payActivity.totalAmountAccepted);
-
     const listDebitNotes = () => {
         if (debitNotes == null) {
-            return <div>Debit notes not loaded</div>;
+            return <div className="debit-note-list">Debit notes not loaded</div>;
         }
         if (debitNotes.debitNotes.length === 0) {
-            return <div>No debit notes</div>;
+            return <div className="debit-note-list">No debit notes</div>;
         }
-        return <div>
-            <h2>Debit notes</h2>
-            {debitNotes.debitNotes.map((debitNote: DebitNote, i: number) => (
-                <div key={i}>
-                    <div>
-                        <div>Debit note no {debitNote.debitNoteId}</div>
-                    </div>
-                </div>
-            ))}
+        return <div className="debit-note-list">
+            <div className="debit-note-list-title">Debit notes</div>
+            <table className="debit-note-list-table">
+                <thead>
+                    <tr>
+                        <th>Debit note id</th>
+                        <th>Due</th>
+                        <th>Status</th>
+                        <th>Timestamp</th>
+                        <th>Usage counter vector</th>
+                        <th>Previous debit note id</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {debitNotes.debitNotes.map((debitNote: DebitNote, i: number) => (
+                        <tr key={i}>
+                            <td>{debitNote.debitNoteId}</td>
+                            <td>{debitNote.totalAmountDue}</td>
+                            <td>{debitNote.status}</td>
+                            <td>{debitNote.timestamp}</td>
+                            <td>{`[${debitNote.usageCounterVector.join(";")}]`}</td>
+                            <td>{debitNote.previousDebitNoteId}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     }
     return (
         <div className={"pay-activity-box"}>
             <div className={"pay-activity-box-body"}>
-                <div className={"pay-activity-id"}>PayActivity no {props.payActivity.id}</div>
+                <div className={"pay-activity-id"}>Amounts for activity with id <b>{props.payActivity.id}</b> (Role: {props.payActivity.role}):</div>
+                <table className="pay-activity-amount-table">
+                    <thead>
+                        <tr>
+                            <th>Due</th>
+                            <th>Accepted</th>
+                            <th>Scheduled</th>
+                            <th>Paid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{props.payActivity.totalAmountDue}</td>
+                            <td>{props.payActivity.totalAmountAccepted}</td>
+                            <td>{props.payActivity.totalAmountScheduled}</td>
+                            <td>{props.payActivity.totalAmountPaid}</td>
+                        </tr>
+                    </tbody>
+                </table>
 
+                <div className="pay-activity-entry">{`Agreement id: ${props.payActivity.agreementId}`}</div>
+                <div className="pay-activity-entry">{`Created at: ${props.payActivity.createdTs}`}</div>
                 {listDebitNotes()}
             </div>
         </div>

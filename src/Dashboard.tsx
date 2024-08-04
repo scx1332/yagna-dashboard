@@ -31,48 +31,47 @@ const Dashboard = () => {
         );
     }
     return (
-        <div>
-            <div>
-                <div className="top-header">
-                    <div className="top-header-title">Yagna Dashboard</div>
-                    <div className="top-header-navigation">
-                        <Link to="/">Main</Link>
-                        <Link to="/invoices">Invoices</Link>
-                        <Link to="/payAgreements">Pay Agreements</Link>
-                        <Link to="/payActivities">Pay Activities</Link>
-                        <Link to="/backendSettings">Settings</Link>
-                    </div>
-                </div>
-                <div className="main-content">
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <div>
-                                    <div>
-                                        <div className={"padding"}>
-                                            <p>
-                                                Connected to payment driver API url:{" "}
-                                                <a href={backendSettings.backendUrl}>{backendSettings.backendUrl}</a>
-                                            </p>
-                                            <textarea
-                                                style={{ width: 800, height: 500 }}
-                                                readOnly={true}
-                                                value={JSON.stringify(config, null, 2)}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        />
-                        <Route path="invoices" element={<Invoices />} />
-                        <Route path="payAgreements" element={<PayAgreements />} />
-                        <Route path="payActivities" element={<PayActivities />} />
-                        <Route path="backendSettings" element={<BackendSettings />} />
-                    </Routes>
+        <div className="main-page">
+            <div className="top-header">
+                <div className="top-header-title">Yagna Dashboard</div>
+                <div className="top-header-navigation">
+                    <Link to="/">Main</Link>
+                    <Link to="/invoices">Invoices</Link>
+                    <Link to="/payAgreements">Pay Agreements</Link>
+                    <Link to="/payActivities">Pay Activities</Link>
+                    <Link to="/backendSettings">Settings</Link>
                 </div>
             </div>
+            <div className="main-content">
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <div>
+                                <div>
+                                    <div className={"padding"}>
+                                        <p>
+                                            Connected to payment driver API url:{" "}
+                                            <a href={backendSettings.backendUrl}>{backendSettings.backendUrl}</a>
+                                        </p>
+                                        <textarea
+                                            style={{ width: 800, height: 500 }}
+                                            readOnly={true}
+                                            value={JSON.stringify(config, null, 2)}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    />
+                    <Route path="invoices" element={<Invoices />} />
+                    <Route path="payAgreements" element={<PayAgreements />} />
+                    <Route path="payActivities" element={<PayActivities />} />
+                    <Route path="backendSettings" element={<BackendSettings />} />
+                </Routes>
+            </div>
         </div>
+
     );
 };
 

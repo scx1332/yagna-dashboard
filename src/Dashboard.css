@@ -1,3 +1,7 @@
+div.main-content {
+    padding-left: 20px;
+    padding-right: 20px;
+}
 .top-header {
     display: flex;
     align-items: center;
