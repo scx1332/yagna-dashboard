@@ -19,7 +19,7 @@ const PayActivities = () => {
     }, []);
 
     function row(payActivity: PayActivity, i: number) {
-        return <PayActivityBox key={i} payActivity={payActivity} />;
+        return <PayActivityBox loadDebitNotes={true} key={i} payActivity={payActivity} />;
     }
 
     useEffect(() => {
