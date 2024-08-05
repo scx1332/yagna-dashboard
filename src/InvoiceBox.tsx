@@ -23,7 +23,7 @@ const InvoiceBox = (props: InvoiceBoxProps) => {
     return (
         <div className={"invoice-box"}>
             <div className={"invoice-box-body"}>
-                <div className={"invoice-id"}>Invoice no {props.invoice.id}</div>
+                <div className={"invoice-id"}>Invoice no {props.invoice.invoiceId}</div>
                 <div className={"invoice-owner"}>
                     1
                 </div>
