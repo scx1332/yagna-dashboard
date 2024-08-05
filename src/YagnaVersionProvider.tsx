@@ -5,7 +5,6 @@ import { backendFetch } from "./common/BackendCall";
 
 export const FRONTEND_BASE = "/erc20/frontend/";
 
-
 export const ConfigContext = createContext<PaymentDriverConfig | null | string>(null);
 export const useConfigOrNull = () => useContext<PaymentDriverConfig | null | string>(ConfigContext);
 export const useConfig = () => {

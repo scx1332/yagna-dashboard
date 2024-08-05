@@ -1,4 +1,3 @@
-
 interface YagnaVersion {
     name: string;
 }

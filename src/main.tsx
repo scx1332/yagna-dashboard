@@ -13,10 +13,6 @@ if (!rootEl) {
 }
 const root = ReactDOM.createRoot(rootEl);
 
-interface FrontendConfig {
-    backendUrl: string;
-}
-
 root.render(
     <React.StrictMode>
         <BackendSettingsProvider>

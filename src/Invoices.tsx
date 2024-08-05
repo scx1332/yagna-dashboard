@@ -15,7 +15,7 @@ const Invoices = () => {
     const loadInvoices = useCallback(async () => {
         const response = await backendFetch(backendSettings, "/payment-api/v1/invoices");
         const response_json = await response.json();
-        setInvoices({"invoices":response_json});
+        setInvoices({ invoices: response_json });
     }, []);
 
     function row(invoice: Invoice, i: number) {

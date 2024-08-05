@@ -1,16 +1,10 @@
 import React, { useContext } from "react";
 import "./Dashboard.css";
 
-import TransactionFeed from "./TransactionFeed";
 import { useConfigOrNull } from "./YagnaVersionProvider";
 import { Routes, Route, Link } from "react-router-dom";
-import Accounts from "./Accounts";
-import AllowanceBoxDesignTime from "./AllowanceBoxDesignTime";
-import Allowances from "./Allowances";
-import Balance from "./Balance";
 import BackendSettings from "./BackendSettings";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
-import Web3Status from "./Web3Status";
 import Invoices from "./Invoices";
 import PayAgreements from "./PayAgreements";
 import PayActivities from "./PayActivities";
@@ -71,7 +65,6 @@ const Dashboard = () => {
                 </Routes>
             </div>
         </div>
-
     );
 };
 
