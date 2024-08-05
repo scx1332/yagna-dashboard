@@ -19,7 +19,7 @@ const PayAgreements = () => {
     }, []);
 
     function row(payAgreement: PayAgreement, i: number) {
-        return <PayAgreementBox key={i} payAgreement={payAgreement}/>;
+        return <PayAgreementBox loadActivities={true} key={i} payAgreement={payAgreement}/>;
     }
 
     useEffect(() => {
