@@ -15,7 +15,11 @@ const PayAgreements = () => {
     const loadPayAgreements = useCallback(async () => {
         const response = await backendFetch(backendSettings, "/payment-api/v1/payAgreements");
         const response_json = await response.json();
-        setPayAgreements({ payAgreements: response_json });
+        const payAgreements = response_json;
+        const payAgreementsSorted = payAgreements.sort((a: PayAgreement, b: PayAgreement) => {
+            return a.createdTs.localeCompare(b.createdTs);
+        }).reverse();
+        setPayAgreements({ payAgreements: payAgreementsSorted });
     }, []);
 
     function row(payAgreement: PayAgreement, i: number) {

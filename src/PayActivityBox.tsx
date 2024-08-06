@@ -9,6 +9,7 @@ import Invoice from "./model/Invoice";
 interface PayActivityBoxProps {
     payActivity: PayActivity;
     loadDebitNotes: boolean;
+    loadActivityState: boolean;
 }
 
 interface GetDebitNotesResponse {
@@ -18,6 +19,11 @@ interface GetDebitNotesResponse {
 interface GetInvoiceResponse {
     invoice: Invoice | null;
 }
+interface GetActivityStateResponse {
+    state: any;
+}
+
+
 
 const PayActivityBox = (props: PayActivityBoxProps) => {
     const { backendSettings } = useContext(BackendSettingsContext);
@@ -45,12 +51,25 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
         }
     }, [props.loadDebitNotes]);
 
+    const [activityState, setActivityState] = React.useState<GetActivityStateResponse | null>(null);
+    const loadActivityState = useCallback(async () => {
+        if (props.loadDebitNotes) {
+            const response = await backendFetch(
+                backendSettings,
+                `/activity-api/v1/activity/${props.payActivity.id}/state`,
+            );
+            const response_json = await response.json();
+            setActivityState({ state: response_json });
+        }
+    }, [props.loadActivityState]);
+
+    let [updateCounter, setUpdateCounter] = React.useState(0);
     useEffect(() => {
-        loadDebitNotes().then();
-    }, [loadDebitNotes]);
-    useEffect(() => {
-        loadInvoice().then();
-    }, [loadInvoice]);
+        setDebitNotes(null);
+        setInvoice(null);
+        setActivityState(null);
+        Promise.all([loadDebitNotes(), loadInvoice(), loadActivityState()]).then();
+    }, [loadActivityState, loadInvoice, loadDebitNotes, updateCounter]);
 
     const listDebitNotes = () => {
         if (debitNotes == null) {
@@ -90,6 +109,19 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
         );
     };
 
+
+    const renderActivityState = (activityState: GetActivityStateResponse | null) => {
+        if (activityState == null || !activityState.state) {
+            return <div className="activity-state-info">Activity state not loaded</div>;
+        }
+        //check if array
+        if ( Array.isArray(activityState.state.state) ) {
+            const states = activityState.state.state;
+
+            return <div>State pair: [{states[0]}, {states[1]}]</div>
+        }
+    }
+
     const renderInvoice = (invoice: GetInvoiceResponse | null) => {
         if (invoice == null) {
             return <div className="invoice-info">Invoice not loaded</div>;
@@ -120,35 +152,45 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
             </div>
         );
     };
+
+    const handleReloadButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        setUpdateCounter(updateCounter + 1);
+    };
+
     return (
         <div className={"pay-activity-box"}>
+            <button onClick={handleReloadButtonClick} >Reload</button>
             <div className={"pay-activity-box-body"}>
                 <div className={"pay-activity-id"}>
                     Amounts for activity with id <b>{props.payActivity.id}</b> (Role: {props.payActivity.role}):
                 </div>
                 <table className="pay-activity-amount-table">
                     <thead>
-                        <tr>
-                            <th>Due</th>
-                            <th>Accepted</th>
-                            <th>Scheduled</th>
-                            <th>Paid</th>
-                        </tr>
+                    <tr>
+                        <th>Due</th>
+                        <th>Accepted</th>
+                        <th>Scheduled</th>
+                        <th>Paid</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>{props.payActivity.totalAmountDue}</td>
-                            <td>{props.payActivity.totalAmountAccepted}</td>
-                            <td>{props.payActivity.totalAmountScheduled}</td>
-                            <td>{props.payActivity.totalAmountPaid}</td>
-                        </tr>
+                    <tr>
+                        <td>{props.payActivity.totalAmountDue}</td>
+                        <td>{props.payActivity.totalAmountAccepted}</td>
+                        <td>{props.payActivity.totalAmountScheduled}</td>
+                        <td>{props.payActivity.totalAmountPaid}</td>
+                    </tr>
                     </tbody>
                 </table>
+                {renderActivityState(activityState)}
 
                 <div className="pay-activity-entry">{`Agreement id: ${props.payActivity.agreementId}`}</div>
                 {renderInvoice(invoice)}
+
                 <div className="pay-activity-entry">{`Created at: ${props.payActivity.createdTs}`}</div>
                 {listDebitNotes()}
+
             </div>
         </div>
     );
