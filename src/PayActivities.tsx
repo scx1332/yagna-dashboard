@@ -1,8 +1,8 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, {useCallback, useContext, useEffect} from "react";
 import PayActivityBox from "./PayActivityBox";
 import PayActivity from "./model/PayActivity";
-import { BackendSettingsContext } from "./BackendSettingsProvider";
-import { backendFetch } from "./common/BackendCall";
+import {BackendSettingsContext} from "./BackendSettingsProvider";
+import {backendFetch} from "./common/BackendCall";
 
 interface GetPayActivitiesResponse {
     payActivities: PayActivity[];
@@ -10,7 +10,7 @@ interface GetPayActivitiesResponse {
 
 const PayActivities = () => {
     const [payActivities, setPayActivities] = React.useState<GetPayActivitiesResponse | null>(null);
-    const { backendSettings } = useContext(BackendSettingsContext);
+    const {backendSettings} = useContext(BackendSettingsContext);
 
     const loadPayActivities = useCallback(async () => {
         const limitDate = new Date();
@@ -25,11 +25,12 @@ const PayActivities = () => {
         activities = activities.sort((a: PayActivity, b: PayActivity) => {
             return b.createdTs.localeCompare(a.createdTs);
         });
-        setPayActivities({ payActivities: activities });
+        setPayActivities({payActivities: activities});
     }, []);
 
     function row(payActivity: PayActivity, i: number) {
-        return <PayActivityBox loadDebitNotes={true} key={i} payActivity={payActivity} />;
+        return <PayActivityBox loadActivityState={true} loadOrderItems={true} loadDebitNotes={true} key={i}
+                               payActivity={payActivity}/>;
     }
 
     useEffect(() => {

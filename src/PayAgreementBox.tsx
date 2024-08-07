@@ -51,7 +51,11 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
                 <div className="activity-list-body">
                     {activities.activities.map((activity: PayActivity, i: number) => (
                         <div key={i}>
-                            <PayActivityBox payActivity={activity} loadDebitNotes={true} />
+                            <PayActivityBox
+                                loadOrderItems={true}
+                                loadDebitNotes={true}
+                                loadActivityState={true}
+                                payActivity={activity} />
                         </div>
                     ))}
                 </div>

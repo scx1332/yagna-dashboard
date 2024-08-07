@@ -10,6 +10,7 @@ interface PayActivityBoxProps {
     payActivity: PayActivity;
     loadDebitNotes: boolean;
     loadActivityState: boolean;
+    loadOrderItems: boolean;
 }
 
 interface GetDebitNotesResponse {
@@ -22,6 +23,9 @@ interface GetInvoiceResponse {
 interface GetActivityStateResponse {
     state: any;
 }
+interface GetOrderItemsResponse {
+    orderItems: any;
+}
 
 
 
@@ -33,7 +37,7 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
         if (props.loadDebitNotes) {
             const response = await backendFetch(
                 backendSettings,
-                `/payment-api/v1/payActivity/${props.payActivity.id}/debitNotes`,
+                `/payment-api/v1/payActivities/${props.payActivity.id}/debitNotes`,
             );
             const response_json = await response.json();
             setDebitNotes({ debitNotes: response_json });
@@ -44,7 +48,7 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
         if (props.loadDebitNotes) {
             const response = await backendFetch(
                 backendSettings,
-                `/payment-api/v1/payActivity/${props.payActivity.id}/invoice`,
+                `/payment-api/v1/payActivities/${props.payActivity.id}/invoice`,
             );
             const response_json = await response.json();
             setInvoice({ invoice: response_json });
@@ -53,7 +57,7 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
 
     const [activityState, setActivityState] = React.useState<GetActivityStateResponse | null>(null);
     const loadActivityState = useCallback(async () => {
-        if (props.loadDebitNotes) {
+        if (props.loadActivityState) {
             const response = await backendFetch(
                 backendSettings,
                 `/activity-api/v1/activity/${props.payActivity.id}/state`,
@@ -63,13 +67,26 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
         }
     }, [props.loadActivityState]);
 
-    let [updateCounter, setUpdateCounter] = React.useState(0);
+    const [activityOrderItems, setActivityOrderItems] = React.useState<GetOrderItemsResponse | null>(null);
+    const loadActivityOrderItems = useCallback(async () => {
+        if (props.loadOrderItems) {
+            const response = await backendFetch(
+                backendSettings,
+                `/payment-api/v1/payActivities/${props.payActivity.id}/orders`,
+            );
+            const response_json = await response.json();
+            setActivityOrderItems({ orderItems: response_json });
+        }
+    }, [props.loadOrderItems]);
+
+    const [updateCounter, setUpdateCounter] = React.useState(0);
     useEffect(() => {
         setDebitNotes(null);
         setInvoice(null);
         setActivityState(null);
-        Promise.all([loadDebitNotes(), loadInvoice(), loadActivityState()]).then();
-    }, [loadActivityState, loadInvoice, loadDebitNotes, updateCounter]);
+        setActivityOrderItems(null);
+        Promise.all([loadDebitNotes(), loadInvoice(), loadActivityState(), loadActivityOrderItems()]).then();
+    }, [loadActivityState, loadInvoice, loadDebitNotes, loadActivityOrderItems, updateCounter]);
 
     const listDebitNotes = () => {
         if (debitNotes == null) {
@@ -108,6 +125,46 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
             </div>
         );
     };
+
+    const listOrderItems = () => {
+        if (activityOrderItems == null) {
+            return <div className="debit-note-list">Order items not loaded</div>;
+        }
+        if (activityOrderItems.orderItems.length === 0) {
+            return <div className="debit-note-list">No order items</div>;
+        }
+        return <div className="debit-note-list">
+                <div className="debit-note-list-title">Order items</div>
+                <table className="debit-note-list-table">
+                    <thead>
+                        <tr>
+                            <th>Order id</th>
+                            <th>Owner id</th>
+                            <th>Payee address</th>
+                            <th>Amount</th>
+                            <th>Agreement id</th>
+                            <th>Invoice id</th>
+                            <th>Activity id</th>
+                            <th>Debit note id</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {activityOrderItems.orderItems.map((orderItem: any, i: number) => (
+                            <tr key={i}>
+                                <td>{orderItem.order_id}</td>
+                                <td>{orderItem.owner_id}</td>
+                                <td>{orderItem.payee_addr}</td>
+                                <td>{orderItem.amount}</td>
+                                <td>{orderItem.agreement_id}</td>
+                                <td>{orderItem.invoice_id}</td>
+                                <td>{orderItem.activity_id}</td>
+                                <td>{orderItem.debit_note_id}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+    }
 
 
     const renderActivityState = (activityState: GetActivityStateResponse | null) => {
@@ -189,7 +246,11 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                 {renderInvoice(invoice)}
 
                 <div className="pay-activity-entry">{`Created at: ${props.payActivity.createdTs}`}</div>
+
+                {listOrderItems()}
+
                 {listDebitNotes()}
+
 
             </div>
         </div>
