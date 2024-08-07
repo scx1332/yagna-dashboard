@@ -9,11 +9,17 @@ import PayActivityBox from "./PayActivityBox";
 interface PayAgreementBoxProps {
     payAgreement: PayAgreement;
     loadActivities: boolean;
+    loadOrderItems: boolean;
 }
 
 interface GetActivitiesResponse {
     activities: any[];
 }
+
+interface GetOrderItemsResponse {
+    orderItems: any;
+}
+
 
 const PayAgreementBox = (props: PayAgreementBoxProps) => {
     const { backendSettings } = useContext(BackendSettingsContext);
@@ -27,16 +33,29 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
         if (props.loadActivities) {
             const response = await backendFetch(
                 backendSettings,
-                `/payment-api/v1/payAgreement/${props.payAgreement.id}/activities`,
+                `/payment-api/v1/payAgreements/${props.payAgreement.id}/activities`,
             );
             const response_json = await response.json();
             setActivities({ activities: response_json });
         }
     }, [props.loadActivities]);
 
+    const [agreementOrderItems, setAgreementOrderItems] = React.useState<GetOrderItemsResponse | null>(null);
+    const loadAgreementOrderItems = useCallback(async () => {
+        if (props.loadOrderItems) {
+            const response = await backendFetch(
+                backendSettings,
+                `/payment-api/v1/payAgreements/${props.payAgreement.id}/orders`,
+            );
+            const response_json = await response.json();
+            setAgreementOrderItems({ orderItems: response_json });
+        }
+    }, [props.loadOrderItems]);
+
+
     useEffect(() => {
-        loadActivities().then();
-    }, [loadActivities]);
+        Promise.all([loadActivities(), loadAgreementOrderItems()]).then();
+    }, [loadActivities, loadAgreementOrderItems]);
 
     const listActivities = () => {
         if (activities == null) {
@@ -63,6 +82,46 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
         );
     };
 
+    const listOrderItems = () => {
+        if (agreementOrderItems == null) {
+            return <div className="debit-note-list">Order items not loaded</div>;
+        }
+        if (agreementOrderItems.orderItems.length === 0) {
+            return <div className="debit-note-list">No order items</div>;
+        }
+        return <div className="debit-note-list">
+            <div className="debit-note-list-title">Order items</div>
+            <table className="debit-note-list-table">
+                <thead>
+                <tr>
+                    <th>Order id</th>
+                    <th>Owner id</th>
+                    <th>Payee address</th>
+                    <th>Amount</th>
+                    <th>Agreement id</th>
+                    <th>Invoice id</th>
+                    <th>Activity id</th>
+                    <th>Debit note id</th>
+                </tr>
+                </thead>
+                <tbody>
+                {agreementOrderItems.orderItems.map((orderItem: any, i: number) => (
+                    <tr key={i}>
+                        <td>{orderItem.order_id}</td>
+                        <td>{orderItem.owner_id}</td>
+                        <td>{orderItem.payee_addr}</td>
+                        <td>{orderItem.amount}</td>
+                        <td>{orderItem.agreement_id}</td>
+                        <td>{orderItem.invoice_id}</td>
+                        <td>{orderItem.activity_id}</td>
+                        <td>{orderItem.debit_note_id}</td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        </div>
+    }
+
     return (
         <div className={"pay-agreement-box"}>
             <div className={"pay-agreement-box-body"}>
@@ -85,6 +144,7 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
                         </tr>
                     </tbody>
                 </table>
+                {listOrderItems()}
                 {listActivities()}
             </div>
         </div>
