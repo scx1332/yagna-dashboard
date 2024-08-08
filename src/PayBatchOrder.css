@@ -1,0 +1,75 @@
+div.batch-order-box {
+    border: 1px solid blue;
+    padding: 5px;
+}
+
+div.batch-order-box-body {
+    position: relative;
+    height: 8.5em;
+    width: 100%;
+}
+
+div.batch-order-box-body div.batch-order-id {
+    position: absolute;
+    top: 0em;
+}
+div.batch-order-box-body div.batch-order-spender {
+    position: absolute;
+    left: 12em;
+    top: 0em;
+}
+div.batch-order-box-body div.batch-order-spender-descr {
+    position: absolute;
+    left: 12em;
+    top: 1.2em;
+}
+div.batch-order-box-body div.batch-order-spender-descr span {
+    font-size: 0.9em;
+}
+
+div.batch-order-box-body div.batch-order-owner {
+    position: absolute;
+    left: 12em;
+    top: 3em;
+}
+div.batch-order-box-body div.batch-order-owner-descr {
+    position: absolute;
+    left: 12em;
+    top: 4.2em;
+}
+div.batch-order-box-body div.batch-order-owner-descr span {
+    font-size: 0.9em;
+}
+
+div.batch-order-box-body div.batch-order-token-addr {
+    position: absolute;
+    left: 12em;
+    top: 6em;
+}
+
+div.batch-order-box-body div.batch-order-batch-order {
+    position: absolute;
+    left: 12em;
+    top: 7.2em;
+}
+
+div.batch-order-box-body div.batch-order-batch-order span {
+    font-size: 0.9em;
+}
+
+div.batch-order-box-body div.batch-order-chain-id {
+    position: absolute;
+    top: 1.5em;
+}
+
+div.batch-order-box-body div.batch-order-confirm-date {
+    position: absolute;
+    left: 0em;
+    top: 4em;
+    font-size: 0.9em;
+}
+
+div.batch-order-box-body div.batch-order-tx-id {
+    position: absolute;
+    top: 7em;
+}
