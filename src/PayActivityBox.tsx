@@ -107,19 +107,17 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                             <th>Status</th>
                             <th>Timestamp</th>
                             <th>Usage counter vector</th>
-                            <th>Previous debit note id</th>
                         </tr>
                     </thead>
                     <tbody>
                         {debitNotes.debitNotes.map((debitNote: DebitNote, i: number) => (
                             <tr key={i}>
                                 <td>{debitNote.debitNonce}</td>
-                                <td>{debitNote.debitNoteId}</td>
+                                <td><span title={debitNote.debitNoteId}>{debitNote.debitNoteId.substring(0, 8)}</span></td>
                                 <td>{debitNote.totalAmountDue}</td>
                                 <td>{debitNote.status}</td>
                                 <td>{debitNote.timestamp}</td>
                                 <td>{`[${debitNote.usageCounterVector.join(";")}]`}</td>
-                                <td>{debitNote.previousDebitNoteId}</td>
                             </tr>
                         ))}
                     </tbody>
