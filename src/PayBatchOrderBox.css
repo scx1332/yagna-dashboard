@@ -1,0 +1,46 @@
+div.batch-order-box {
+    padding: 5px;
+    border: 2px solid #00FF00;
+    margin-bottom: 2em;
+}
+
+div.batch-order-box-body {
+    position: relative;
+    width: 100%;
+}
+
+div.debit-note-list {
+    padding: 1em;
+}
+div.batch-order-list-title {
+    padding: 10px;
+    font-weight: bold;
+}
+div.batch-order-id {
+    padding: 10px;
+}
+div.batch-order-entry {
+    padding: 10px 15px;
+}
+div.batch-order-list-table {
+    font-weight: bold;
+    padding: 10px;
+}
+div.debit-note-list-entry {
+    padding: 5px 10px;
+}
+table.batch-order-list-table {
+    border-collapse: collapse;
+    margin-left: 10px;
+}
+table.batch-order-list-table th {
+    text-align: left;
+    padding: 5px;
+    border: 1px solid #e0e0e0;
+}
+table.batch-order-list-table td {
+    min-width: 10em;
+    padding: 5px;
+    border: 1px solid #e0e0e0;
+}
+

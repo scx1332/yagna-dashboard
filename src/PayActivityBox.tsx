@@ -101,6 +101,7 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                 <table className="debit-note-list-table">
                     <thead>
                         <tr>
+                            <th>Debit nonce</th>
                             <th>Debit note id</th>
                             <th>Due</th>
                             <th>Status</th>
@@ -112,6 +113,7 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                     <tbody>
                         {debitNotes.debitNotes.map((debitNote: DebitNote, i: number) => (
                             <tr key={i}>
+                                <td>{debitNote.debitNonce}</td>
                                 <td>{debitNote.debitNoteId}</td>
                                 <td>{debitNote.totalAmountDue}</td>
                                 <td>{debitNote.status}</td>

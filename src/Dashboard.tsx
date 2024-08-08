@@ -8,6 +8,7 @@ import { BackendSettingsContext } from "./BackendSettingsProvider";
 import Invoices from "./Invoices";
 import PayAgreements from "./PayAgreements";
 import PayActivities from "./PayActivities";
+import BatchOrders from "./PayBatchOrders";
 
 const Dashboard = () => {
     const config = useConfigOrNull();
@@ -30,6 +31,7 @@ const Dashboard = () => {
                 <div className="top-header-title">Yagna Dashboard</div>
                 <div className="top-header-navigation">
                     <Link to="/">Main</Link>
+                    <Link to="/batchOrders">Batch orders</Link>
                     <Link to="/invoices">Invoices</Link>
                     <Link to="/payAgreements">Pay Agreements</Link>
                     <Link to="/payActivities">Pay Activities</Link>
@@ -59,6 +61,7 @@ const Dashboard = () => {
                         }
                     />
                     <Route path="invoices" element={<Invoices />} />
+                    <Route path="batchOrders" element={<BatchOrders />} />
                     <Route path="payAgreements" element={<PayAgreements />} />
                     <Route path="payActivities" element={<PayActivities />} />
                     <Route path="backendSettings" element={<BackendSettings />} />

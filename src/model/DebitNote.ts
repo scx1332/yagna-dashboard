@@ -1,4 +1,5 @@
 interface DebitNote {
+    debitNonce: number;
     debitNoteId: string;
     issuerId: string;
     recipientId: string;

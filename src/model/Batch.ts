@@ -1,4 +1,24 @@
-interface BatchOrderItemDocument {
+export interface BatchOrder {
+    "id": string,
+    "ts": string,
+    "ownerId": string,
+    "payerAddr": string,
+    "driver": string,
+    "platform": string,
+    "totalAmount": string,
+    "paid": boolean
+}
+
+export interface BatchOrderItem {
+    orderId: string,
+    ownerId: string,
+    payeeAddr: string,
+    amount: string,
+    driverOrderId: string | null,
+    paid: boolean,
+}
+
+export interface BatchOrderItemDocument {
     "ts": string,
     "order_id": string,
     "owner_id": string,
@@ -9,5 +29,3 @@ interface BatchOrderItemDocument {
     "activity_id": string | null,
     "debit_note_id": string | null
 }
-
-export default BatchOrderItemDocument;
