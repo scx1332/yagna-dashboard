@@ -88,8 +88,8 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                     </thead>
                     <tbody>
                     {batchOrderItems.orderItemEntries.map((batchOrderItemEntry: BatchOrderItemEntry, i: number) => (
-                        <>
-                            <tr key={i}>
+                        <React.Fragment key={i}>
+                            <tr>
                                 <td>{batchOrderItemEntry.batchOrderItem.payeeAddr}</td>
                                 <td><b>{batchOrderItemEntry.batchOrderItem.amount}</b></td>
                             </tr>
@@ -101,7 +101,7 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                             <td><AgreementIdBox agreementId={detail.agreement_id}/></td>
                             <td><ActivityIdBox activityId={detail.activity_id}/></td>
                             </tr>)))}
-                        </>
+                        </React.Fragment>
                         ))}
 
                     </tbody>
