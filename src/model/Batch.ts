@@ -6,6 +6,7 @@ export interface BatchOrder {
     "driver": string,
     "platform": string,
     "totalAmount": string,
+    "paidAmount": string,
     "paid": boolean
 }
 
@@ -14,7 +15,7 @@ export interface BatchOrderItem {
     ownerId: string,
     payeeAddr: string,
     amount: string,
-    driverOrderId: string | null,
+    paymentId: string | null,
     paid: boolean,
 }
 

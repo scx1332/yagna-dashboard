@@ -82,6 +82,8 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                     <tr>
                         <th>Payee Addr</th>
                         <th>Amount</th>
+                        <th>Driver payment ID</th>
+                        <th>Is paid</th>
                         <th>Agreement</th>
                         <th>Activity</th>
                     </tr>
@@ -92,17 +94,22 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                             <tr>
                                 <td>{batchOrderItemEntry.batchOrderItem.payeeAddr}</td>
                                 <td><b>{batchOrderItemEntry.batchOrderItem.amount}</b></td>
+                                <td>{batchOrderItemEntry.batchOrderItem.paymentId}</td>
+                                <td>{batchOrderItemEntry.batchOrderItem.paid ? "paid" : "not paid"}</td>
                             </tr>
 
                             {batchOrderItemEntry.details != null && (batchOrderItemEntry.details.map((detail: BatchOrderItemDocument, j: number) => (
                                 <tr key={j + 1000}>
                                     <td></td>
-                            <td>{detail.amount}</td>
-                            <td><AgreementIdBox agreementId={detail.agreement_id}/></td>
-                            <td><ActivityIdBox activityId={detail.activity_id}/></td>
-                            </tr>)))}
+                                    <td>{detail.amount}</td>
+                                    <td>{batchOrderItemEntry.batchOrderItem.paymentId}</td>
+                                    <td>{batchOrderItemEntry.batchOrderItem.paid}</td>
+                                    <td><AgreementIdBox agreementId={detail.agreement_id}/></td>
+                                    <td><ActivityIdBox activityId={detail.activity_id}/></td>
+
+                                </tr>)))}
                         </React.Fragment>
-                        ))}
+                    ))}
 
                     </tbody>
                 </table>
@@ -119,6 +126,7 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                         <th>Owner ID</th>
                         <th>Timestamp</th>
                         <th>Total amount</th>
+                        <th>Paid amount</th>
                         <th>Is paid</th>
                         <th>Payment platform</th>
                     </tr>
@@ -128,7 +136,8 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                             <td>{props.batchOrder.ownerId}</td>
                             <td>{props.batchOrder.ts}</td>
                             <td>{props.batchOrder.totalAmount}</td>
-                            <td>{props.batchOrder.paid}</td>
+                            <td>{props.batchOrder.paidAmount}</td>
+                            <td>{props.batchOrder.paid ? "paid" : "not paid"}</td>
                             <td>{props.batchOrder.platform}</td>
                         </tr>
                     </tbody>
