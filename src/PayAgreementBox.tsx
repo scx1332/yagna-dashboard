@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import "./PayAgreementBox.css";
 import PayAgreement from "./model/PayAgreement";
-import { backendFetch } from "./common/BackendCall";
+import {backendFetch, backendFetchYagna} from "./common/BackendCall";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import PayActivity from "./model/PayActivity";
 import PayActivityBox from "./PayActivityBox";
@@ -31,12 +31,16 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
     const [activities, setActivities] = React.useState<GetActivitiesResponse | null>(null);
     const loadActivities = useCallback(async () => {
         if (props.loadActivities) {
-            const response = await backendFetch(
-                backendSettings,
-                `/payment-api/v1/payAgreements/${props.payAgreement.id}/activities`,
-            );
-            const response_json = await response.json();
-            setActivities({ activities: response_json });
+            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.payAgreement.ownerId);
+
+            if (yagnaServer) {
+                const response = await backendFetchYagna(
+                    yagnaServer,
+                    `/payment-api/v1/payAgreements/${props.payAgreement.id}/activities`,
+                );
+                const response_json = await response.json();
+                setActivities({ activities: response_json });
+            }
         }
     }, [props.loadActivities]);
 
@@ -126,22 +130,24 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
         <div className={"pay-agreement-box"}>
             <div className={"pay-agreement-box-body"}>
                 <div className={"pay-agreement-id"}>PayAgreement no {props.payAgreement.id}</div>
+                <div className="pay-agreement-entry">Owner: {props.payAgreement.ownerId}</div>
+
                 <table className="pay-agreement-amount-table">
                     <thead>
-                        <tr>
-                            <th>Due</th>
-                            <th>Accepted</th>
-                            <th>Scheduled</th>
-                            <th>Paid</th>
-                        </tr>
+                    <tr>
+                        <th>Due</th>
+                        <th>Accepted</th>
+                        <th>Scheduled</th>
+                        <th>Paid</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>{props.payAgreement.totalAmountDue}</td>
-                            <td>{props.payAgreement.totalAmountAccepted}</td>
-                            <td>{props.payAgreement.totalAmountScheduled}</td>
-                            <td>{props.payAgreement.totalAmountPaid}</td>
-                        </tr>
+                    <tr>
+                        <td>{props.payAgreement.totalAmountDue}</td>
+                        <td>{props.payAgreement.totalAmountAccepted}</td>
+                        <td>{props.payAgreement.totalAmountScheduled}</td>
+                        <td>{props.payAgreement.totalAmountPaid}</td>
+                    </tr>
                     </tbody>
                 </table>
                 {listOrderItems()}

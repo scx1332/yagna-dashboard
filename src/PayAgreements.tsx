@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect } from "react";
 import PayAgreementBox from "./PayAgreementBox";
 import PayAgreement from "./model/PayAgreement";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
-import { backendFetch } from "./common/BackendCall";
+import {backendFetch, backendFetchYagna} from "./common/BackendCall";
 
 interface GetPayAgreementsResponse {
     payAgreements: PayAgreement[];
@@ -13,9 +13,13 @@ const PayAgreements = () => {
     const { backendSettings } = useContext(BackendSettingsContext);
 
     const loadPayAgreements = useCallback(async () => {
-        const response = await backendFetch(backendSettings, "/payment-api/v1/payAgreements");
-        const response_json = await response.json();
-        const payAgreements = response_json;
+        let payAgreements: PayAgreement[] = [];
+        for (const yagna_server of backendSettings.yagnaServers) {
+            const response = await backendFetchYagna(yagna_server, "/payment-api/v1/payAgreements");
+            const response_json = await response.json();
+            const payAgreementsLoc = response_json;
+            payAgreements = payAgreements.concat(payAgreementsLoc);
+        }
         const payAgreementsSorted = payAgreements.sort((a: PayAgreement, b: PayAgreement) => {
             return a.createdTs.localeCompare(b.createdTs);
         }).reverse();

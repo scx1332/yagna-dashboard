@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import "./PayActivityBox.css";
 import PayActivity from "./model/PayActivity";
-import { backendFetch } from "./common/BackendCall";
+import {backendFetch, backendFetchYagna} from "./common/BackendCall";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import DebitNote from "./model/DebitNote";
 import Invoice from "./model/Invoice";
@@ -35,47 +35,63 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
     const [debitNotes, setDebitNotes] = React.useState<GetDebitNotesResponse | null>(null);
     const loadDebitNotes = useCallback(async () => {
         if (props.loadDebitNotes) {
-            const response = await backendFetch(
-                backendSettings,
-                `/payment-api/v1/payActivities/${props.payActivity.id}/debitNotes`,
-            );
-            const response_json = await response.json();
-            setDebitNotes({ debitNotes: response_json });
+            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.payActivity.ownerId);
+
+            if (yagnaServer) {
+                const response = await backendFetchYagna(
+                    yagnaServer,
+                    `/payment-api/v1/payActivities/${props.payActivity.id}/debitNotes`,
+                );
+                const response_json = await response.json();
+                setDebitNotes({debitNotes: response_json});
+            }
         }
     }, [props.loadDebitNotes]);
     const [invoice, setInvoice] = React.useState<GetInvoiceResponse | null>(null);
     const loadInvoice = useCallback(async () => {
         if (props.loadDebitNotes) {
-            const response = await backendFetch(
-                backendSettings,
-                `/payment-api/v1/payActivities/${props.payActivity.id}/invoice`,
-            );
-            const response_json = await response.json();
-            setInvoice({ invoice: response_json });
+            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.payActivity.ownerId);
+
+            if (yagnaServer) {
+                const response = await backendFetchYagna(
+                    yagnaServer,
+                    `/payment-api/v1/payActivities/${props.payActivity.id}/invoice`,
+                );
+                const response_json = await response.json();
+                setInvoice({invoice: response_json});
+            }
         }
     }, [props.loadDebitNotes]);
 
     const [activityState, setActivityState] = React.useState<GetActivityStateResponse | null>(null);
     const loadActivityState = useCallback(async () => {
         if (props.loadActivityState) {
-            const response = await backendFetch(
-                backendSettings,
-                `/activity-api/v1/activity/${props.payActivity.id}/state`,
-            );
-            const response_json = await response.json();
-            setActivityState({ state: response_json });
+            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.payActivity.ownerId);
+
+            if (yagnaServer) {
+                const response = await backendFetchYagna(
+                    yagnaServer,
+                    `/activity-api/v1/activity/${props.payActivity.id}/state`,
+                );
+                const response_json = await response.json();
+                setActivityState({state: response_json});
+            }
         }
     }, [props.loadActivityState]);
 
     const [activityOrderItems, setActivityOrderItems] = React.useState<GetOrderItemsResponse | null>(null);
     const loadActivityOrderItems = useCallback(async () => {
         if (props.loadOrderItems) {
-            const response = await backendFetch(
-                backendSettings,
-                `/payment-api/v1/payActivities/${props.payActivity.id}/orders`,
-            );
-            const response_json = await response.json();
-            setActivityOrderItems({ orderItems: response_json });
+            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.payActivity.ownerId);
+
+            if (yagnaServer) {
+                const response = await backendFetchYagna(
+                    yagnaServer,
+                    `/payment-api/v1/payActivities/${props.payActivity.id}/orders`,
+                );
+                const response_json = await response.json();
+                setActivityOrderItems({orderItems: response_json});
+            }
         }
     }, [props.loadOrderItems]);
 
@@ -222,6 +238,8 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                 <div className={"pay-activity-id"}>
                     Amounts for activity with id <b>{props.payActivity.id}</b> (Role: {props.payActivity.role}):
                 </div>
+                <div className="pay-activity-entry">Owner: {props.payActivity.ownerId}</div>
+
                 <table className="pay-activity-amount-table">
                     <thead>
                     <tr>

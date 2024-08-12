@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from "react";
 import "./BackendSettings.css";
 import {BackendSettingsContext} from "./BackendSettingsProvider";
-import {backendFetch} from "./common/BackendCall";
+import {backendFetch, getYangaServerInfo} from "./common/BackendCall";
 import { YagnaVersion, YagnaIdentity} from "./model/YagnaVersion";
 import {YagnaServer} from "./common/BackendSettings";
 import {DateTime} from "luxon";
@@ -40,11 +40,16 @@ const YagnaServerNode = (props: YagnaServerNodeProps) => {
         </tr>
         <tr>
             <th>Enabled</th>
-            <td>{props.server.enabled ? "active":"inactive"}</td>
+            <td>{props.server.enabled ? "active" : "inactive"}</td>
         </tr>
         <tr>
             <th>Last connected</th>
             <td><DateBox date={props.server.lastConnected} title=""/></td>
+        </tr>
+        <tr>
+            <th>Last error</th>
+
+            <td style={{color: "red"}}>{props.server.lastError && <DateBox date={props.server.lastError} title=""/>}</td>
         </tr>
 
 
@@ -69,6 +74,9 @@ const BackendSettingsBox = () => {
         setBearerToken(e.target.value);
     };
 
+    const [updateToken, setUpdateToken] = React.useState(0);
+
+
     const [checkInProgress, setCheckInProgress] = React.useState(false);
     const [checkSuccessful, setCheckSuccessful] = React.useState(false);
     const [checkResponse, setCheckResponse] = React.useState("");
@@ -88,49 +96,40 @@ const BackendSettingsBox = () => {
         setCheckData(null)
         setCheckError("");
         try {
-            let version: YagnaVersion;
-            let identity: YagnaIdentity;
-            {
-                const response = await backendFetch(settingsToCheck, "/version/get");
-                if (response.type === "opaque") {
-                    setCheckError(`Failed to connect to ${backendSettings.backendUrl} due to CORS policy`);
-                    return;
-                }
-                const responseErr = response;
-                const responseBody = await response.text();
-                const response_json = JSON.parse(responseBody);
-                version = response_json["current"];
-            }
-            {
-                const response = await backendFetch(settingsToCheck, "/me");
-                if (response.type === "opaque") {
-                    setCheckError(`Failed to connect to ${backendSettings.backendUrl} due to CORS policy`);
-                    return;
-                }
-                const responseErr = response;
-                const responseBody = await response.text();
-                const response_json = JSON.parse(responseBody);
-                identity = response_json;
-            }
+            const server = await getYangaServerInfo(settingsToCheck);
 
             setCheckInProgress(false);
             setCheckResponse(`Success`);
             setCheckSuccessful(true);
-            setCheckData({
-                name: identity.name,
-                identity: identity.identity,
-                role: identity.role,
-                version: version.version,
-                url: backendUrl,
-                appKey: bearerToken,
-                enabled: true,
-                lastConnected: new Date().toISOString(),
-            });
+            setCheckData(server);
         } catch (e) {
             setCheckError(`Failed to connect to ${backendUrl}`);
             setCheckInProgress(false);
         }
 
+    };
+
+    const checkAll = async () => {
+
+        const checkedServers = [];
+        for (const server of backendSettings.yagnaServers) {
+            try {
+                const updateServer = await getYangaServerInfo({
+                    backendUrl: server.url,
+                    bearerToken: server.appKey,
+                    enableBearerToken: true,
+                    yagnaServers: [],
+                });
+                checkedServers.push(updateServer);
+            } catch (e) {
+                server.lastError = (new Date()).toISOString();
+                checkedServers.push(server);
+            }
+        }
+        const newSettings = backendSettings;
+        newSettings.yagnaServers = checkedServers;
+        setBackendSettings(newSettings);
+        setUpdateToken(updateToken + 1);
     };
 
     const cancelChanges = () => {
@@ -153,6 +152,7 @@ const BackendSettingsBox = () => {
         newSettings.yagnaServers.push(checkData);
         setCheckSuccessful(false);
         setBackendSettings(newSettings);
+        setUpdateToken(updateToken + 1);
     }
 
     useEffect(() => {
@@ -185,6 +185,7 @@ const BackendSettingsBox = () => {
             }
             newSettings.yagnaServers = retainElements;
             setBackendSettings(newSettings);
+            setUpdateToken(updateToken + 1);
         }
     }
 
@@ -221,7 +222,7 @@ const BackendSettingsBox = () => {
                 />)
             }
 
-
+            <input type="button" value="Check All" onClick={checkAll}/>
             {backendList()}
             <h3>Backend URL:</h3>
             <input type="text" value={backendUrl} onChange={backendChanged}/>
@@ -241,6 +242,7 @@ const BackendSettingsBox = () => {
             <hr/>
 
             <div className="box-line">
+
                 <input type="button" value="Check" onClick={check} disabled={checkInProgress}/>
                 <input type="button" value="Cancel" onClick={cancelChanges} disabled={!isCancelEnabled()}/>
                 <input type="button" value="Add" onClick={saveAndAdd} disabled={!checkSuccessful}/>

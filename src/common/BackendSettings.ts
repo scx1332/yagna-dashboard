@@ -7,6 +7,7 @@ export interface YagnaServer {
     appKey: string;
     enabled: boolean;
     lastConnected: string;
+    lastError: string | null;
 }
 
 export default interface BackendSettings {
