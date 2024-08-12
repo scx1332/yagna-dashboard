@@ -3,6 +3,11 @@ div.backend-settings {
     margin: 10px;
     border: 1px solid gray;
 }
+div.backend-check-error {
+    color: red;
+    font-weight: bold;
+    padding: 10px;
+}
 
 div.backend-settings input[type="text"] {
     width: 30em;
@@ -13,4 +18,24 @@ div.backend-settings div.box-line {
 }
 div.backend-settings div.box-line input {
     margin-right: 10px;
+}
+div.yagna-server-entry {
+    padding: 1em;
+}
+table.yagna-node-table {
+    width: 100%;
+    border-collapse: collapse;
+
+}
+
+table.yagna-node-table th {
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table.yagna-node-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
 }

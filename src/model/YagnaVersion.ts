@@ -1,4 +1,14 @@
-interface YagnaVersion {
+export interface YagnaVersion {
+    version: string;
     name: string;
+    seen: boolean;
+    releaseTs: string;
+    insertionTs: string;
+    updateTs: string;
 }
-export default YagnaVersion;
+
+export interface YagnaIdentity {
+    identity: string,
+    name: string,
+    role: string,
+}
