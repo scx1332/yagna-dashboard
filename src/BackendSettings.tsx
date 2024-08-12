@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from "react";
 import "./BackendSettings.css";
 import {BackendSettingsContext} from "./BackendSettingsProvider";
 import {backendFetch, getYangaServerInfo} from "./common/BackendCall";
-import { YagnaVersion, YagnaIdentity} from "./model/YagnaVersion";
+import {YagnaVersion, YagnaIdentity} from "./model/YagnaVersion";
 import {YagnaServer} from "./common/BackendSettings";
 import {DateTime} from "luxon";
 import DateBox from "./DateBox";
@@ -49,7 +49,8 @@ const YagnaServerNode = (props: YagnaServerNodeProps) => {
         <tr>
             <th>Last error</th>
 
-            <td style={{color: "red"}}>{props.server.lastError && <DateBox date={props.server.lastError} title=""/>}</td>
+            <td style={{color: "red"}}>{props.server.lastError &&
+                <DateBox date={props.server.lastError} title=""/>}</td>
         </tr>
 
 
@@ -60,12 +61,12 @@ const YagnaServerNode = (props: YagnaServerNodeProps) => {
 const BackendSettingsBox = () => {
     const {backendSettings, setBackendSettings, resetSettings} = useContext(BackendSettingsContext);
 
-    const [backendUrl, setBackendUrl] = React.useState(backendSettings.backendUrl);
+    const [backendUrl, setBackendUrl] = React.useState("");
     const backendChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
         setBackendUrl(e.target.value);
     };
-    const [bearerToken, setBearerToken] = React.useState(backendSettings.bearerToken);
-    const [enableBearerToken, setEnableBearerToken] = React.useState(backendSettings.enableBearerToken);
+    const [bearerToken, setBearerToken] = React.useState("");
+    const [enableBearerToken, setEnableBearerToken] = React.useState(true);
 
     const bearerEnabledChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEnableBearerToken(e.target.checked);
@@ -85,10 +86,8 @@ const BackendSettingsBox = () => {
     const check = async () => {
         //
         const settingsToCheck = {
-            backendUrl: backendUrl,
-            bearerToken: bearerToken,
-            enableBearerToken: true,
-            yagnaServers: [],
+            url: backendUrl,
+            appKey: bearerToken,
         };
         setCheckResponse(`Connecting to ${backendUrl} ...`);
         setCheckInProgress(true);
@@ -114,12 +113,7 @@ const BackendSettingsBox = () => {
         const checkedServers = [];
         for (const server of backendSettings.yagnaServers) {
             try {
-                const updateServer = await getYangaServerInfo({
-                    backendUrl: server.url,
-                    bearerToken: server.appKey,
-                    enableBearerToken: true,
-                    yagnaServers: [],
-                });
+                const updateServer = await getYangaServerInfo(server);
                 checkedServers.push(updateServer);
             } catch (e) {
                 server.lastError = (new Date()).toISOString();
@@ -133,9 +127,9 @@ const BackendSettingsBox = () => {
     };
 
     const cancelChanges = () => {
-        setBackendUrl(backendSettings.backendUrl);
-        setBearerToken(backendSettings.bearerToken);
-        setEnableBearerToken(backendSettings.enableBearerToken);
+        setBackendUrl("");
+        setBearerToken("");
+        setEnableBearerToken(true);
     };
     const saveAndAdd = () => {
         if (checkData === null) {
@@ -155,23 +149,11 @@ const BackendSettingsBox = () => {
         setUpdateToken(updateToken + 1);
     }
 
-    useEffect(() => {
-        setBackendUrl(backendSettings.backendUrl);
-        setBearerToken(backendSettings.bearerToken);
-        setEnableBearerToken(backendSettings.enableBearerToken);
-    }, [backendSettings]);
 
     const resetToDefault = () => {
         resetSettings();
     };
 
-    const isCancelEnabled = () => {
-        return (
-            backendUrl !== backendSettings.backendUrl ||
-            bearerToken !== backendSettings.bearerToken ||
-            enableBearerToken !== backendSettings.enableBearerToken
-        );
-    };
 
     function forgetConnection(id: string, appKey: string, url: string) {
         return () => {
@@ -198,7 +180,9 @@ const BackendSettingsBox = () => {
                     {backendSettings.yagnaServers.map((server, i) =>
                         <div key={i} className="yagna-server-entry">
                             <YagnaServerNode server={server}/>
-                            <button onClick={forgetConnection(server.identity, server.appKey, server.url)}>Forget connection</button>
+                            <button onClick={forgetConnection(server.identity, server.appKey, server.url)}>Forget
+                                connection
+                            </button>
 
                         </div>
                     )}
@@ -244,7 +228,6 @@ const BackendSettingsBox = () => {
             <div className="box-line">
 
                 <input type="button" value="Check" onClick={check} disabled={checkInProgress}/>
-                <input type="button" value="Cancel" onClick={cancelChanges} disabled={!isCancelEnabled()}/>
                 <input type="button" value="Add" onClick={saveAndAdd} disabled={!checkSuccessful}/>
                 <input type="button" value="Reset to default" onClick={resetToDefault}/>
             </div>

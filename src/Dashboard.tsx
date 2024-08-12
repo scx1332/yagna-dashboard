@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import "./Dashboard.css";
 
-import { useConfigOrNull } from "./YagnaVersionProvider";
 import { Routes, Route, Link } from "react-router-dom";
 import BackendSettings from "./BackendSettings";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
@@ -11,16 +10,10 @@ import PayActivities from "./PayActivities";
 import BatchOrders from "./PayBatchOrders";
 
 const Dashboard = () => {
-    const config = useConfigOrNull();
-
     const { backendSettings } = useContext(BackendSettingsContext);
-    if (config == null) {
-        return <div>Loading...</div>;
-    }
-    if (typeof config === "string") {
+    if (backendSettings.yagnaServers.length == 0) {
         return (
             <div>
-                <div>{config}</div>
                 <BackendSettings />
             </div>
         );
@@ -48,13 +41,7 @@ const Dashboard = () => {
                                     <div className={"padding"}>
                                         <p>
                                             Connected to payment driver API url:{" "}
-                                            <a href={backendSettings.backendUrl}>{backendSettings.backendUrl}</a>
                                         </p>
-                                        <textarea
-                                            style={{ width: 800, height: 500 }}
-                                            readOnly={true}
-                                            value={JSON.stringify(config, null, 2)}
-                                        />
                                     </div>
                                 </div>
                             </div>
