@@ -1,10 +1,8 @@
 import React, {useContext, useEffect} from "react";
 import "./BackendSettings.css";
 import {BackendSettingsContext} from "./BackendSettingsProvider";
-import {backendFetch, getYangaServerInfo} from "./common/BackendCall";
-import {YagnaVersion, YagnaIdentity} from "./model/YagnaVersion";
+import {getYangaServerInfo} from "./common/BackendCall";
 import {YagnaServer} from "./common/BackendSettings";
-import {DateTime} from "luxon";
 import DateBox from "./DateBox";
 
 interface YagnaServerNodeProps {

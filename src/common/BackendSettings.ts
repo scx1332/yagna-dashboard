@@ -13,3 +13,5 @@ export interface YagnaServer {
 export default interface BackendSettings {
     yagnaServers: YagnaServer[];
 }
+
+
