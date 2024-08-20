@@ -29,6 +29,31 @@ div.pay-cycle-list-table {
 div.debit-note-list-entry {
     padding: 5px 10px;
 }
+div.pay-cycle-button-row {
+    padding: 10px;
+}
+div.pay-cycle-button-row button {
+    margin-right: 10px;
+}
+div.pay-cycle-edit-hidden {
+    display: none;
+}
+
+div.pay-cycle-edit {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    margin-top: 10px;
+}
+div.pay-cycle-edit-entry {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    margin-top: 10px;
+    display: flex;
+}
+div.pay-cycle-edit-entry div {
+    margin-right: 1em;
+}
+
 table.pay-cycle-list-table {
     border-collapse: collapse;
     margin-left: 10px;

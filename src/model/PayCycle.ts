@@ -2,8 +2,9 @@ export interface PayCycle {
     "nodeId": string
     "platform": string
     "cron": string | null,
-    "intervalSec": bigint | null,
+    "intervalSec": number | null,
     "lastProcess": string | null,
-    "maxIntervalSec": bigint,
+    "maxIntervalSec": number,
     "nextProcess": string,
+    "extraPayTimeSec": number,
 }
