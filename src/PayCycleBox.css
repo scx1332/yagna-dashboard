@@ -49,6 +49,22 @@ div.pay-cycle-edit-entry {
     border: 1px solid #e0e0e0;
     margin-top: 10px;
     display: flex;
+    align-items: center;
+}
+div.pay-cycle-edit-entry div {
+
+}
+div.pay-cycle-edit-entry div:nth-child(1) {
+    min-width: 2em;
+}
+div.pay-cycle-edit-entry div:nth-child(2) {
+    min-width: 12em;
+}
+div.pay-cycle-edit-entry div:nth-child(3) {
+    min-width: 10em;
+}
+div.pay-cycle-edit-entry div:nth-child(4) {
+    min-width: 8em;
 }
 div.pay-cycle-edit-entry div {
     margin-right: 1em;

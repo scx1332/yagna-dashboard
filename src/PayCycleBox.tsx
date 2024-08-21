@@ -262,6 +262,9 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                 </div>
                 <div className="pay-cycle-edit-entry">
                     <div>
+
+                    </div>
+                    <div>
                         Extra payment time:
                     </div>
                     <div>
@@ -273,13 +276,13 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                 </div>
                 <div className="pay-cycle-edit-entry">
                     <div>
-                        <input checked={nextProcessChecked} type="checkbox" onChange={(e) => setNextProcessChecked(e.target.checked)}/>
+                    <input checked={nextProcessChecked} type="checkbox" onChange={(e) => setNextProcessChecked(e.target.checked)}/>
                     </div>
                     <div>
                         Overwrite next process:
                     </div>
                     <div>
-                        <input value={nextInputValue} onChange={(e) => setNextInputValue(e.target.value)}></input>
+                        <input disabled={!nextProcessChecked} value={nextInputValue} onChange={(e) => setNextInputValue(e.target.value)}></input>
                     </div>
                     <div>
                         {nextUpdateValid}
@@ -292,8 +295,6 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                 {!editMode && <button onClick={_e => setEditMode(true)}>Edit</button>}
                 {editMode && <button onClick={saveHandler()}>Save</button>}
                 {editMode && <button onClick={_e => setEditMode(false)}>Cancel</button>}
-
-
             </div>
         </div>
     );
