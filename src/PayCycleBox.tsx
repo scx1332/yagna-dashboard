@@ -13,14 +13,10 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
     const {backendSettings} = useContext(BackendSettingsContext);
 
 
-    const divInputRef = React.useRef<HTMLDivElement>(null);
-    const intervalInputRef = React.useRef<HTMLInputElement>(null);
-    const cronInputRef = React.useRef<HTMLInputElement>(null);
-    const extraInputRef = React.useRef<HTMLInputElement>(null);
-    const nextInputRef = React.useRef<HTMLInputElement>(null);
-    const editBtn = React.useRef<HTMLButtonElement>(null);
-    const saveBtn = React.useRef<HTMLButtonElement>(null);
-    const cancelBtn = React.useRef<HTMLButtonElement>(null);
+    const [intervalInputValue, setIntervalInputValue] = React.useState<string>("");
+    const [cronInputValue, setCronInputValue] = React.useState<string>("");
+    const [extraInputValue, setExtraInputValue] = React.useState<string>("");
+    const [nextInputValue, setNextInputValue] = React.useState<string>("");
 
     const [payCycle, setPayCycle] = React.useState<PayCycle | null>(null);
 
@@ -30,34 +26,26 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
         const response = await backendFetch(backendSettings, "/payment-api/v1/batchCycle/" + props.payCycle.platform);
         const response_json = await response.json();
         setPayCycle(response_json);
-        if (intervalInputRef.current) {
-            if (response_json.intervalSec) {
-                intervalInputRef.current.value = response_json.intervalSec.toString();
-                setIntervalCheckBox(true);
-                validatePayCycleInterval(intervalInputRef.current.value);
-            } else {
-                intervalInputRef.current.value = "";
-                setIntervalCheckBox(false);
-            }
+
+        if (response_json.intervalSec) {
+            setIntervalInputValue(response_json.intervalSec.toString());
+            setIntervalCheckBox(true);
+        } else {
+            setIntervalInputValue("");
+            setIntervalCheckBox(false);
         }
-        if (cronInputRef.current) {
-            if (response_json.cron) {
-                cronInputRef.current.value = response_json.cron;
-                setCronCheckBox(true);
-                validateCron(cronInputRef.current.value);
-            } else {
-                cronInputRef.current.value = "";
-                setCronCheckBox(false);
-            }
+
+
+        if (response_json.cron) {
+            setCronInputValue(response_json.cron);
+            setCronCheckBox(true);
+        } else {
+            setCronInputValue("")
+            setCronCheckBox(false);
         }
-        if (extraInputRef.current) {
-            extraInputRef.current.value = response_json.extraPayTimeSec.toString();
-            validateExtra(extraInputRef.current.value);
-        }
-        if (nextInputRef.current) {
-            nextInputRef.current.value = response_json.nextProcess;
-            validateNext(nextInputRef.current.value);
-        }
+
+        setExtraInputValue(response_json.extraPayTimeSec.toString());
+        setNextInputValue(response_json.nextProcess);
     }, [updateNo]);
 
     const [payCycleIntervalValid, setCycleIntervalValid] = React.useState<number | null>(null);
@@ -79,30 +67,20 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
         setIntervalCheckBox(!enable);
         setCronCheckBox(enable);
     }
-    const payCycleEnabledChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-        validatePayCycleInterval(e.target.value);
-    };
-
-    const cronChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-        validateCron(e.target.value);
-    }
-    const extraChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-        validateExtra(e.target.value);
-    }
-    const nextChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-        validateNext(e.target.value);
-    }
 
     useEffect(() => {
-        validatePayCycleInterval(intervalInputRef.current?.value ?? "");
-        validateCron(cronInputRef.current?.value ?? "");
-    }, [cronCheckBox, intervalCheckBox])
+        validatePayCycleInterval();
+        validateCron();
+        validateExtra();
+        validateNext();
+    }, [cronCheckBox, intervalCheckBox, intervalInputValue, cronInputValue, extraInputValue, nextInputValue])
 
-    function validatePayCycleInterval(interval: string) {
+    function validatePayCycleInterval() {
         if (!intervalCheckBox) {
             setCycleIntervalValid(null);
             return;
         }
+        const interval = intervalInputValue;
         try {
             if (isDigitsOnly(interval)) {
                 const intervalSec = parseInt(interval);
@@ -125,17 +103,18 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
         }
     }
 
-    function validateCron(cron: string) {
+    function validateCron() {
         if (!cronCheckBox) {
             setCronInputValid(null);
             return;
         }
-        setCronInputValid(cron);
+        setCronInputValid(cronInputValue);
     }
 
-    function validateExtra(extra: string) {
+    function validateExtra() {
+        const extra = extraInputValue;
         try {
-            if (!isDigitsOnly(extra)) {
+            if (isDigitsOnly(extra)) {
                 const extraSec = parseInt(extra);
                 setExtraValid(extraSec);
             } else {
@@ -152,8 +131,8 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
         }
     }
 
-    function validateNext(next: string) {
-        setNextUpdateValid(next);
+    function validateNext() {
+        setNextUpdateValid(nextInputValue);
     }
 
     async function savePayCycle() {
@@ -246,7 +225,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                 </table>
             </div>
 
-            <div ref={divInputRef} className={editMode ? "pay-cycle-edit" : "pay-cycle-edit-hidden"}>
+            <div className={editMode ? "pay-cycle-edit" : "pay-cycle-edit-hidden"}>
                 <div className="pay-cycle-edit-entry">
                     <div>
                         <input checked={intervalCheckBox} type="checkbox" onChange={(e) => intervalCheckBoxChanged(e)}/>
@@ -255,8 +234,8 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                         Interval
                     </div>
                     <div>
-                        <input disabled={!intervalCheckBox} ref={intervalInputRef}
-                               onChange={(e) => payCycleEnabledChanged(e)}></input></div>
+                        <input disabled={!intervalCheckBox} value={intervalInputValue}
+                               onChange={(e) => setIntervalInputValue(e.target.value)}></input></div>
                     <div>
                         {payCycleIntervalValid}
                     </div>
@@ -269,8 +248,8 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                         Cron:
                     </div>
                     <div>
-                        <input disabled={!cronCheckBox} ref={cronInputRef}
-                               onChange={(e) => cronChanged(e)}></input></div>
+                        <input disabled={!cronCheckBox} value={cronInputValue}
+                               onChange={(e) => setCronInputValue(e.target.value)}></input></div>
                     <div>
                         {cronInputValid}
                     </div>
@@ -280,7 +259,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                         Max payment time:
                     </div>
                     <div>
-                        <input ref={extraInputRef} onChange={(e) => extraChanged(e)}></input>
+                        <input value={extraInputValue} onChange={(e) => setExtraInputValue(e.target.value)}></input>
                     </div>
                     <div>
                         {extraValid}
@@ -291,7 +270,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                         Next process:
                     </div>
                     <div>
-                        <input ref={nextInputRef} onChange={(e) => nextChanged(e)}></input>
+                        <input value={nextInputValue} onChange={(e) => setNextInputValue(e.target.value)}></input>
                     </div>
                     <div>
                         {nextUpdateValid}
@@ -301,9 +280,9 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
 
             <div className={"pay-cycle-button-row"}>
                 <button>Run process now</button>
-                {!editMode && <button ref={editBtn} onClick={_e => setEditMode(true)}>Edit</button>}
-                {editMode && <button ref={saveBtn} onClick={saveHandler()}>Save</button>}
-                {editMode && <button ref={cancelBtn} onClick={_e => setEditMode(false)}>Cancel</button>}
+                {!editMode && <button onClick={_e => setEditMode(true)}>Edit</button>}
+                {editMode && <button onClick={saveHandler()}>Save</button>}
+                {editMode && <button onClick={_e => setEditMode(false)}>Cancel</button>}
 
 
             </div>
