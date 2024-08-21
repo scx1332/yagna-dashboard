@@ -152,9 +152,35 @@ const BackendSettingsBox = () => {
         resetSettings();
     };
 
+    function setAsMain(id: string, appKey: string, url: string) {
+        return () => {
+            const newSettings = backendSettings;
+            for (const [server_no, server] of newSettings.yagnaServers.entries()) {
+
+                if (server.identity === id || server.appKey === appKey || server.url === url) {
+                    if (server_no === 0) {
+                        window.alert("Main server is already set");
+                        return;
+                    }
+                    [newSettings.yagnaServers[server_no - 1], newSettings.yagnaServers[server_no]] = [newSettings.yagnaServers[server_no], newSettings.yagnaServers[server_no - 1]];
+                    setBackendSettings(newSettings);
+                    setUpdateToken(updateToken + 1);
+                    return;
+                }
+            }
+        }
+    }
+    function checkConnection(id: string, appKey: string, url: string) {
+        return () => {
+            window.alert("Not implemented yet");
+        }
+    }
 
     function forgetConnection(id: string, appKey: string, url: string) {
         return () => {
+            if (!window.confirm("Are you sure you want to forget this connection?")) {
+                return;
+            }
             const newSettings = backendSettings;
 
             const retainElements = [];
@@ -178,10 +204,17 @@ const BackendSettingsBox = () => {
                     {backendSettings.yagnaServers.map((server, i) =>
                         <div key={i} className="yagna-server-entry">
                             <YagnaServerNode server={server}/>
-                            <button onClick={forgetConnection(server.identity, server.appKey, server.url)}>Forget
-                                connection
-                            </button>
-
+                            <div className="yagna-server-entry-button-list">
+                                <button disabled={i == 0} onClick={setAsMain(server.identity, server.appKey, server.url)}>
+                                    Move up
+                                </button>
+                                <button onClick={checkConnection(server.identity, server.appKey, server.url)}>
+                                    Check connection
+                                </button>
+                                <button onClick={forgetConnection(server.identity, server.appKey, server.url)}>
+                                    Forget connection
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>

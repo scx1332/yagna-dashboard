@@ -46,6 +46,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
 
         setExtraInputValue(response_json.extraPayTimeSec.toString());
         setNextInputValue(response_json.nextProcess);
+        setNextProcessChecked(false);
     }, [updateNo]);
 
     const [payCycleIntervalValid, setCycleIntervalValid] = React.useState<number | null>(null);
@@ -57,6 +58,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
 
     const [intervalCheckBox, setIntervalCheckBox] = React.useState<boolean>(false);
     const [cronCheckBox, setCronCheckBox] = React.useState<boolean>(false);
+    const [nextProcessChecked, setNextProcessChecked] = React.useState<boolean>(false);
     const intervalCheckBoxChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
         const enable = e.target.checked;
         setIntervalCheckBox(enable);
@@ -73,7 +75,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
         validateCron();
         validateExtra();
         validateNext();
-    }, [cronCheckBox, intervalCheckBox, intervalInputValue, cronInputValue, extraInputValue, nextInputValue])
+    }, [cronCheckBox, intervalCheckBox, intervalInputValue, cronInputValue, extraInputValue, nextInputValue, nextProcessChecked])
 
     function validatePayCycleInterval() {
         if (!intervalCheckBox) {
@@ -132,6 +134,10 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
     }
 
     function validateNext() {
+        if (!nextProcessChecked) {
+            setNextUpdateValid(null);
+            return;
+        }
         setNextUpdateValid(nextInputValue);
     }
 
@@ -208,7 +214,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                         <th>Set by interval</th>
                         <th>Set by cron</th>
                         <th>Max interval</th>
-                        <th>Max payment time</th>
+                        <th>Extra payment time</th>
                         <th>Next process</th>
                     </tr>
                     </thead>
@@ -256,7 +262,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                 </div>
                 <div className="pay-cycle-edit-entry">
                     <div>
-                        Max payment time:
+                        Extra payment time:
                     </div>
                     <div>
                         <input value={extraInputValue} onChange={(e) => setExtraInputValue(e.target.value)}></input>
@@ -267,7 +273,10 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                 </div>
                 <div className="pay-cycle-edit-entry">
                     <div>
-                        Next process:
+                        <input checked={nextProcessChecked} type="checkbox" onChange={(e) => setNextProcessChecked(e.target.checked)}/>
+                    </div>
+                    <div>
+                        Overwrite next process:
                     </div>
                     <div>
                         <input value={nextInputValue} onChange={(e) => setNextInputValue(e.target.value)}></input>
