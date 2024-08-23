@@ -33,17 +33,33 @@ const DateBox = (props: DateBoxProps) => {
         const luxonDate = DateTime.fromISO(dateStr);
         const currentDate = DateTime.now();
 
-        const interval = Interval.fromDateTimes(luxonDate, dateNow);
-
         let message;
-        if (interval.length("days") > 3) {
-            message = Math.floor(interval.length("days")) + " days ago";
-        } else if (interval.length("hours") > 3) {
-            message = Math.floor(interval.length("hours")) + " hours ago";
-        } else if (interval.length("minutes") > 3) {
-            message = Math.floor(interval.length("minutes")) + " min. ago";
+        if (luxonDate < dateNow) {
+            const interval = Interval.fromDateTimes(luxonDate, dateNow);
+
+
+            if (interval.length("days") > 3) {
+                message = Math.floor(interval.length("days")) + " days ago";
+            } else if (interval.length("hours") > 3) {
+                message = Math.floor(interval.length("hours")) + " hours ago";
+            } else if (interval.length("minutes") > 3) {
+                message = Math.floor(interval.length("minutes")) + " min. ago";
+            } else {
+                message = Math.floor(interval.length("seconds")) + " sec. ago";
+            }
         } else {
-            message = Math.floor(interval.length("seconds")) + " sec. ago";
+            const interval = Interval.fromDateTimes(dateNow, luxonDate);
+
+
+            if (interval.length("days") > 3) {
+                message = "in " + Math.floor(interval.length("days")) + " days";
+            } else if (interval.length("hours") > 3) {
+                message = "in " + Math.floor(interval.length("hours")) + " hours";
+            } else if (interval.length("minutes") > 3) {
+                message = "in " + Math.floor(interval.length("minutes")) + " min";
+            } else {
+                message = "in " + Math.floor(interval.length("seconds")) + " sec";
+            }
         }
 
         let dateMsg = luxonDate.toFormat("yyyy-LL-dd HH:mm:ss");

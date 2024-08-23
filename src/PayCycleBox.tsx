@@ -3,6 +3,7 @@ import "./PayCycleBox.css";
 import {PayCycle} from "./model/PayCycle";
 import {BackendSettingsContext} from "./BackendSettingsProvider";
 import {backendFetch, backendFetchYagna} from "./common/BackendCall";
+import DateBox from "./DateBox";
 
 interface PayCycleBoxProps {
     payCycle: PayCycle;
@@ -21,6 +22,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
     const [payCycle, setPayCycle] = React.useState<PayCycle | null>(null);
 
     const [updateNo, setUpdateNo] = React.useState(0);
+    const [autoUpdate, setAutoUpdate] = React.useState(0);
 
     const loadPayCycle = useCallback(async () => {
         const response = await backendFetch(backendSettings, "/payment-api/v1/batchCycle/" + props.payCycle.platform);
@@ -48,6 +50,20 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
         setNextInputValue(response_json.nextProcess);
         setNextProcessChecked(false);
     }, [updateNo]);
+
+    useEffect(() => {
+        if (!editMode) {
+            loadPayCycle().then();
+        }
+    }, [autoUpdate]);
+
+    useEffect(() => {
+        const autoUpdateInterval =  10 * 1000;
+        const interval = setInterval(() => {
+            setAutoUpdate(new Date().getTime());
+        }, autoUpdateInterval);
+        return () => clearInterval(interval);
+    }, []);
 
     const [payCycleIntervalValid, setCycleIntervalValid] = React.useState<number | null>(null);
     const [editMode, setEditMode] = React.useState<boolean>(false);
@@ -89,6 +105,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                 setCycleIntervalValid(intervalSec);
             } else {
                 setCycleIntervalValid(null);
+                throw "locally";
             }
         } catch (e) {
             try {
@@ -121,6 +138,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                 setExtraValid(extraSec);
             } else {
                 setExtraValid(null);
+                throw "locally";
             }
         } catch (e) {
             try {
@@ -176,7 +194,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
     }
 
     function parseTimeString(timeStr: string) {
-        const timePattern = /(\d+d)?(\d+h)?(\d+m)?(\d+s)?/;
+        const timePattern = /(\d+d\s*)?(\d+h\s*)?(\d+m\s*)?(\d+s)?/;
         const matches = timeStr.match(timePattern);
 
         // Extract hours, minutes, and seconds
@@ -215,6 +233,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                         <th>Set by cron</th>
                         <th>Max interval</th>
                         <th>Extra payment time</th>
+                        <th>Last process</th>
                         <th>Next process</th>
                     </tr>
                     </thead>
@@ -225,7 +244,8 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
                         <td>{payCycle.cron ?? "NULL"}</td>
                         <td>{payCycle.maxIntervalSec?.toString() ?? "NULL"}</td>
                         <td>{payCycle.extraPayTimeSec.toString()}</td>
-                        <td>{payCycle.nextProcess}</td>
+                        <td>{payCycle.lastProcess ? <DateBox date={payCycle.lastProcess} title={""}/> : "NULL"}</td>
+                        <td><DateBox date={payCycle.nextProcess} title={""}/></td>
                     </tr>
                     </tbody>
                 </table>

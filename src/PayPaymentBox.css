@@ -1,0 +1,75 @@
+div.pay-payment-box {
+    border: 1px solid blue;
+    padding: 5px;
+}
+
+div.pay-payment-box-body {
+    position: relative;
+    height: 8.5em;
+    width: 100%;
+}
+
+div.pay-payment-box-body div.pay-payment-id {
+    position: absolute;
+    top: 0em;
+}
+div.pay-payment-box-body div.pay-payment-spender {
+    position: absolute;
+    left: 12em;
+    top: 0em;
+}
+div.pay-payment-box-body div.pay-payment-spender-descr {
+    position: absolute;
+    left: 12em;
+    top: 1.2em;
+}
+div.pay-payment-box-body div.pay-payment-spender-descr span {
+    font-size: 0.9em;
+}
+
+div.pay-payment-box-body div.pay-payment-owner {
+    position: absolute;
+    left: 12em;
+    top: 3em;
+}
+div.pay-payment-box-body div.pay-payment-owner-descr {
+    position: absolute;
+    left: 12em;
+    top: 4.2em;
+}
+div.pay-payment-box-body div.pay-payment-owner-descr span {
+    font-size: 0.9em;
+}
+
+div.pay-payment-box-body div.pay-payment-token-addr {
+    position: absolute;
+    left: 12em;
+    top: 6em;
+}
+
+div.pay-payment-box-body div.pay-payment-pay-payment {
+    position: absolute;
+    left: 12em;
+    top: 7.2em;
+}
+
+div.pay-payment-box-body div.pay-payment-pay-payment span {
+    font-size: 0.9em;
+}
+
+div.pay-payment-box-body div.pay-payment-chain-id {
+    position: absolute;
+    top: 1.5em;
+}
+
+div.pay-payment-box-body div.pay-payment-confirm-date {
+    position: absolute;
+    left: 0em;
+    top: 4em;
+    font-size: 0.9em;
+}
+
+div.pay-payment-box-body div.pay-payment-tx-id {
+    position: absolute;
+    top: 7em;
+}

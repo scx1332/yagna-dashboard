@@ -9,6 +9,7 @@ import PayAgreements from "./PayAgreements";
 import PayActivities from "./PayActivities";
 import BatchOrders from "./PayBatchOrders";
 import PayCycles from "./PayCycles";
+import PayPayments from "./PayPayments";
 
 const Dashboard = () => {
     const { backendSettings } = useContext(BackendSettingsContext);
@@ -28,6 +29,7 @@ const Dashboard = () => {
                     <Link to="/cycles">Pending</Link>
                     <Link to="/batchOrders">Batch orders</Link>
                     <Link to="/invoices">Invoices</Link>
+                    <Link to="/payPayments">Pay Payments</Link>
                     <Link to="/payAgreements">Pay Agreements</Link>
                     <Link to="/payActivities">Pay Activities</Link>
                     <Link to="/backendSettings">Settings</Link>
@@ -52,6 +54,7 @@ const Dashboard = () => {
                     <Route path="invoices" element={<Invoices />} />
                     <Route path="cycles" element={<PayCycles />} />
                     <Route path="batchOrders" element={<BatchOrders />} />
+                    <Route path="payPayments" element={<PayPayments />} />
                     <Route path="payAgreements" element={<PayAgreements />} />
                     <Route path="payActivities" element={<PayActivities />} />
                     <Route path="backendSettings" element={<BackendSettings />} />
