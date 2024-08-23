@@ -152,12 +152,12 @@ const BackendSettingsBox = () => {
         resetSettings();
     };
 
-    function setAsMain(id: string, appKey: string, url: string) {
+    function moveUp(no: number) {
         return () => {
             const newSettings = backendSettings;
             for (const [server_no, server] of newSettings.yagnaServers.entries()) {
 
-                if (server.identity === id || server.appKey === appKey || server.url === url) {
+                if (server_no === no) {
                     if (server_no === 0) {
                         window.alert("Main server is already set");
                         return;
@@ -203,9 +203,10 @@ const BackendSettingsBox = () => {
                 <div>
                     {backendSettings.yagnaServers.map((server, i) =>
                         <div key={i} className="yagna-server-entry">
+                            <h3>No {i}</h3>
                             <YagnaServerNode server={server}/>
                             <div className="yagna-server-entry-button-list">
-                                <button disabled={i == 0} onClick={setAsMain(server.identity, server.appKey, server.url)}>
+                                <button disabled={i == 0} onClick={moveUp(i)}>
                                     Move up
                                 </button>
                                 <button onClick={checkConnection(server.identity, server.appKey, server.url)}>

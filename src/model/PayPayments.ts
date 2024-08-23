@@ -1,3 +1,5 @@
+import {YagnaServer} from "../common/BackendSettings";
+
 export interface PayAgreementPayment {
     agreementId: string,
     amount: string,
@@ -11,6 +13,7 @@ export interface PayActivityPayment {
 }
 
 export interface PayPayment {
+    yagnaServer: YagnaServer,
     paymentId: string,
     payerId: string,
     payeeId: string,

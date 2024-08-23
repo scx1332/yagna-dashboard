@@ -15,3 +15,15 @@ export default interface BackendSettings {
 }
 
 
+export function getYagnaServerById(settings: BackendSettings, id: string): YagnaServer {
+    const entries =  settings.yagnaServers.filter(server => server.identity === id);
+    if (entries.length === 0) {
+        throw new Error("No server found with id: " + id);
+    }
+    const entriesSorted = entries.sort((a, b) => {
+        //todo - return most important role
+        return a.role.localeCompare(b.role);
+    });
+    return entriesSorted[0];
+}
+
