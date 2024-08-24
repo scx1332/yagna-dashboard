@@ -24,3 +24,23 @@ export interface PayAllocation {
     makeDeposit: boolean
     extendTimeout: string | null,
 }
+
+export interface AllocationDepositUpdate {
+    validate: ValidateDepositCall | null,
+}
+
+export interface UpdateAllocation {
+    totalAmount: string | null,
+    timeout: string | null,
+    deposit: AllocationDepositUpdate | null,
+}
+
+export interface NewAllocation {
+    address: string,
+    paymentPlatform: string,
+    totalAmount: string,
+    timeout: string | null,
+    deposit: AllocationDeposit | null,
+    makeDeposit: boolean,
+    extendTimeout: number | null,
+}

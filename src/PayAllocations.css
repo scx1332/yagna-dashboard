@@ -1,0 +1,30 @@
+div.new-allocation {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    margin-top: 10px;
+}
+div.new-allocation-entry {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+div.new-allocation-entry div {
+
+}
+div.new-allocation-entry div:nth-child(1) {
+    min-width: 8em;
+}
+div.new-allocation-entry div:nth-child(2) {
+    min-width: 12em;
+}
+div.new-allocation-entry div:nth-child(3) {
+    min-width: 10em;
+}
+div.new-allocation-entry div:nth-child(4) {
+    min-width: 8em;
+}
+div.new-allocation-entry div {
+    margin-right: 1em;
+}

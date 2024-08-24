@@ -33,3 +33,7 @@ a:hover {
     color: #1434b4;
     background-color: #f2f2ff;
 }
+
+.error-message {
+    color: red;
+}
