@@ -1,0 +1,15 @@
+div.pay-allocation-box {
+    border: 1px solid blue;
+    padding: 5px;
+}
+
+div.pay-allocation-box-body {
+    position: relative;
+
+    width: 100%;
+}
+
+div.pay-allocation-box-entry {
+
+    padding: 1em;
+}
