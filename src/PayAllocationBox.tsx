@@ -1,7 +1,7 @@
-import React, {useCallback, useContext} from "react";
+import React, {useCallback, useContext, useEffect} from "react";
 import "./PayAllocationBox.css";
 import DateBox from "./DateBox";
-import {PayAllocation, UpdateAllocation} from "./model/PayAllocations";
+import {AllocationDepositUpdate, PayAllocation, UpdateAllocation} from "./model/PayAllocations";
 import {backendFetchYagna} from "./common/BackendCall";
 import {getYagnaServerById, YagnaServer} from "./common/BackendSettings";
 import {BackendSettingsContext} from "./BackendSettingsProvider";
@@ -95,16 +95,29 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
         }
     }
 
-    function extendAllocationClick() {
-        extendAllocation({
-            totalAmount: null,
-            timeout: DateTime.now().plus({minute: 1}).toISO(),
-            deposit: null,
-        }).then();
-    }
     function releaseAllocationClick() {
         releaseAllocation().then();
     }
+    const [inputValue, setInputValue] = React.useState<string>("10.0");
+    const [inputTimeout, setInputTimeout] = React.useState<string>(DateTime.now().plus({hour: 1}).toISO());
+
+    const [inputValueValidated, setInputValueValidated] = React.useState<string>("");
+    const [inputTimeoutValidated, setInputTimeoutValidated] = React.useState<string>("");
+    useEffect(() => {
+        setInputValueValidated(inputValue);
+        setInputTimeoutValidated(inputTimeout);
+    }, [inputValue, inputTimeout]);
+    const [inProgress, setInProgress] = React.useState<boolean>(false);
+
+    function extendAllocationClick() {
+        setInProgress(true);
+        extendAllocation({
+            totalAmount: inputValueValidated,
+            timeout: inputTimeoutValidated,
+            deposit: null,
+        }).then()
+    }
+
 
     React.useEffect(() => {
         loadPayAllocation().then();
@@ -116,6 +129,27 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
             <PayAllocationBox payAllocation={payAllocation}/>
             <button onClick={e => extendAllocationClick()}>Extend allocation</button>
             <button onClick={e => releaseAllocationClick()}>Release allocation</button>
+            <div className={"new-allocation"}>
+                <h3>Extend Allocation</h3>
+                <div className={"new-allocation-entry"}>
+                    <div>GLM value:</div>
+                    <div>
+                        <input value={inputValue} onChange={e => setInputValue(e.target.value)}/>
+                    </div>
+                    <div> {inputValueValidated} GLM</div>
+                </div>
+
+                <div className={"new-allocation-entry"}>
+                    <div>Timeout:</div>
+                    <div>
+                        <input value={inputTimeout} onChange={e => setInputTimeout(e.target.value)}/>
+                    </div>
+                    <div>
+                        <DateBox date={inputTimeoutValidated} title={""}/>
+                    </div>
+                </div>
+                <button disabled={inProgress} onClick={e => extendAllocationClick()}>Extend allocation</button>
+            </div>
 
         </div>
     );
@@ -129,6 +163,7 @@ export const PayAllocationBox = (props: PayAllocationBoxProps) => {
 
     return (
         <div className={"pay-allocation-box"}>
+            <h1>PayAllocations</h1>
 
             <div className={"pay-allocation-box-body"}>
                 <h3>PayAllocation - from node id: {props.payAllocation.yagnaServer.identity} </h3>
