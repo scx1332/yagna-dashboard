@@ -41,9 +41,10 @@ const PayAllocations = () => {
 
     function row(payAllocation: PayAllocation, i: number) {
         return <PayAllocationBoxWrapper deletedEvent={() => onDelete()} key={i} payAllocationId={payAllocation.allocationId}
-                                        nodeId={payAllocation.yagnaServer.identity}/>;
+                                             nodeId={payAllocation.yagnaServer.identity}/>;
     }
 
+    const [enableNewAllocation, setEnableNewAllocation] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | null>(null);
 
     async function createAllocation(nodeId: string, args: NewAllocation) {
@@ -62,6 +63,7 @@ const PayAllocations = () => {
                 const response_json = await response.json();
                 response_json.yagnaServer = yagnaServer;
 
+                setEnableNewAllocation(false);
                 setError("");
             }
         } catch (e) {
@@ -105,8 +107,7 @@ const PayAllocations = () => {
     }, [loadPayAllocations, updateNo]);
     return (
         <div>
-            <h1>PayAllocations</h1>
-            <div className={"new-allocation"}>
+            {enableNewAllocation && <div className={"new-allocation"}>
                 <h3>Create new</h3>
                 <div className={"new-allocation-entry"}>
                     <div>GLM value:</div>
@@ -132,11 +133,16 @@ const PayAllocations = () => {
                         <DateBox date={inputTimeoutValidated} title={""}/>
                     </div>
                 </div>
-                <button disabled={inProgress} onClick={e => newAllocationClick()}>New Allocation</button>
-            </div>
+                <button disabled={inProgress} onClick={e => newAllocationClick()}>Submit new</button>
+            </div>}
+            {!enableNewAllocation && <div className={"new-allocation"}>
+                <button onClick={_ => setEnableNewAllocation(true)}>New Allocation</button>
+            </div>}
             {error && <div className="error-message">{error}</div>}
-            {payAllocations?.payAllocations.map(row)}
-            {JSON.stringify(payAllocations)}
+            <div className={"pay-allocations-row-container"}>
+                {payAllocations?.payAllocations.map(row)}
+            </div>
+            {/*JSON.stringify(payAllocations)*/}
         </div>
     );
 };

@@ -1,15 +1,35 @@
+
 div.pay-allocation-box {
-    border: 1px solid blue;
-    padding: 5px;
+    border: 1px solid #dddddd;
+    margin: 0.5em;
+    padding: 0.5em;
+    background-color: #F8F8F8;
+    width: max-content;
 }
 
 div.pay-allocation-box-body {
     position: relative;
 
-    width: 100%;
+    display: flex;
+    flex-direction: row;
 }
 
 div.pay-allocation-box-entry {
+    padding: 0.5em 1.0em 0.5em 0.0em;
+}
+div.pay-allocation-box-entry-col-left {
+}
+div.pay-allocation-box-entry-col-right {
+}
 
-    padding: 1em;
+div.pay-allocation-box-node-id {
+    display: flex;
+    align-items: center;
+    padding: 0.0em 0.0em 0.5em 0.0em;
+}
+div.pay-allocation-box-node-id div:nth-child(1) {
+    padding-right: 0.5em;
+}
+div.pay-allocation-box button {
+    margin-right: 0.5em;
 }

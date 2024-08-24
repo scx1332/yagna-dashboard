@@ -1,7 +1,7 @@
 div.new-allocation {
-    padding: 10px;
-    border: 1px solid #e0e0e0;
-    margin-top: 10px;
+    padding: 0.5em;
+    margin-top: 1em;
+    border-bottom: 1px solid #e0e0e0;
 }
 div.new-allocation-entry {
     padding: 10px;
@@ -13,18 +13,24 @@ div.new-allocation-entry {
 div.new-allocation-entry div {
 
 }
+pay-allocation-box-node-id-entry {
+    font-family: monospace;
+}
 div.new-allocation-entry div:nth-child(1) {
-    min-width: 8em;
+    min-width: 3.5em;
 }
 div.new-allocation-entry div:nth-child(2) {
-    min-width: 12em;
+    min-width: 14em;
 }
 div.new-allocation-entry div:nth-child(3) {
-    min-width: 10em;
-}
-div.new-allocation-entry div:nth-child(4) {
-    min-width: 8em;
+    min-width: 6em;
+    max-width: 8em;
 }
 div.new-allocation-entry div {
     margin-right: 1em;
+}
+div.pay-allocations-row-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
