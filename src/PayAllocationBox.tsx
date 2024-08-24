@@ -79,6 +79,8 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
         } catch (e) {
             setError(`Error encountered: ${e}`);
         }
+        setInProgress(false);
+
     }
 
     async function releaseAllocation() {
@@ -127,7 +129,6 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
             <h3>PayAllocation with {props.payAllocationId}</h3>
             {error && <div>{error}</div>}
             <PayAllocationBox payAllocation={payAllocation}/>
-            <button onClick={e => extendAllocationClick()}>Extend allocation</button>
             <button onClick={e => releaseAllocationClick()}>Release allocation</button>
             <div className={"new-allocation"}>
                 <h3>Extend Allocation</h3>
@@ -148,7 +149,7 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
                         <DateBox date={inputTimeoutValidated} title={""}/>
                     </div>
                 </div>
-                <button disabled={inProgress} onClick={e => extendAllocationClick()}>Extend allocation</button>
+                <button disabled={inProgress} onClick={_ => extendAllocationClick()}>Change allocation</button>
             </div>
 
         </div>
