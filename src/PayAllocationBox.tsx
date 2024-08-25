@@ -116,13 +116,13 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
             <div style={{display: "flex", flexDirection: "row"}}>
                 <PayAllocationBox payAllocation={payAllocation}/>
                 <div className="allocation-item-button-box">
-                    <button disabled={inProgress} onClick={_ => setRequestExtended(true)}>Change</button>
+                    <button disabled={requestExtended} onClick={_ => setRequestExtended(true)}>Change</button>
                     <button onClick={e => releaseAllocationClick()}>Release</button>
                 </div>
             </div>
-            {requestExtended && <div className={"new-allocation"}>
-                <h3>Change allocation</h3>
-                <div className={"new-allocation-entry"}>
+            {requestExtended && <div className={"change-allocation"}>
+                <h4>Change allocation</h4>
+                <div className={"change-allocation-entry"}>
                     <div>Amount:</div>
                     <div>
                         <input value={inputValue} onChange={e => setInputValue(e.target.value)}/>
@@ -130,7 +130,7 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
                     <div> {inputValueValidated} GLM</div>
                 </div>
 
-                <div className={"new-allocation-entry"}>
+                <div className={"change-allocation-entry"}>
                     <div>Timeout:</div>
                     <div>
                         <input value={inputTimeout} onChange={e => setInputTimeout(e.target.value)}/>

@@ -6,6 +6,15 @@ div.pay-allocation-box {
     background-color: #F8F8F8;
     width: max-content;
 }
+div.change-allocation {
+    padding: 0.5em;
+    margin-top: 0.0em;
+    border-bottom: 1px solid #e0e0e0;
+}
+div.change-allocation button {
+    margin-right: 0.5em;
+    margin-top: 0.5em;
+}
 
 div.pay-allocation-box-body {
     position: relative;
@@ -40,4 +49,30 @@ div.allocation-item-button-box {
 }
 div.allocation-item-button-box button {
     margin-bottom: 0.5em;
+}
+div.change-allocation-entry {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+div.change-allocation-entry div {
+
+}
+pay-allocation-box-node-id-entry {
+    font-family: monospace;
+}
+div.change-allocation-entry div:nth-child(1) {
+    min-width: 4em;
+}
+div.change-allocation-entry div:nth-child(2) {
+    min-width: 12em;
+}
+div.change-allocation-entry div:nth-child(3) {
+    min-width: 6em;
+    max-width: 7em;
+}
+div.change-allocation-entry div {
+    margin-right: 1em;
 }
