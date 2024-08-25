@@ -3,7 +3,7 @@ import {PayAllocationBox, PayAllocationBoxWrapper} from "./PayAllocationBox";
 import {NewAllocation, PayAllocation} from "./model/PayAllocations";
 import {BackendSettingsContext} from "./BackendSettingsProvider";
 import {backendFetch, backendFetchYagna} from "./common/BackendCall";
-import {getYagnaServerById} from "./common/BackendSettings";
+import {getYagnaServerById, YagnaServer} from "./common/BackendSettings";
 import DateBox from "./DateBox";
 import "./PayAllocations.css"
 import {DateTime} from "luxon";
@@ -47,9 +47,8 @@ const PayAllocations = () => {
     const [enableNewAllocation, setEnableNewAllocation] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string | null>(null);
 
-    async function createAllocation(nodeId: string, args: NewAllocation) {
+    async function createAllocation(yagnaServer: YagnaServer, args: NewAllocation) {
         try {
-            const yagnaServer = getYagnaServerById(backendSettings, nodeId);
             const response = await backendFetchYagna(yagnaServer, "/payment-api/v1/allocations", {
                 method: "POST",
                 body: JSON.stringify(args),
@@ -77,8 +76,8 @@ const PayAllocations = () => {
 
     function newAllocationClick() {
         setInProgress(true);
-        createAllocation(backendSettings.yagnaServers[0].identity, {
-            address: backendSettings.yagnaServers[0].identity,
+        createAllocation(backendSettings.yagnaServers[selectedYaServer], {
+            address: backendSettings.yagnaServers[selectedYaServer].identity,
             paymentPlatform: inputPlatformValidated,
             totalAmount: inputValueValidated,
             timeout: inputTimeoutValidated,
@@ -102,6 +101,7 @@ const PayAllocations = () => {
     }, [inputValue, inputPlatform, inputTimeout]);
 
 
+    const [selectedYaServer, setSelectedYaServer] = React.useState<number>(0);
     useEffect(() => {
         loadPayAllocations().then();
     }, [loadPayAllocations, updateNo]);
@@ -109,6 +109,16 @@ const PayAllocations = () => {
         <div>
             {enableNewAllocation && <div className={"new-allocation"}>
                 <h3>Create new</h3>
+                <div className={"new-allocation-entry"}>
+                    <div>Server</div>
+                    <div>
+                        <select onChange={e => setSelectedYaServer(parseInt(e.target.value))}>
+                            {backendSettings.yagnaServers.map((server, i) =>
+                                <option key={i} value={i}>{server.name}({server.identity})</option>
+                            )}
+                        </select>
+                    </div>
+                </div>
                 <div className={"new-allocation-entry"}>
                     <div>GLM value:</div>
                     <div>

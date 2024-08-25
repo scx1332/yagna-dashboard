@@ -33,3 +33,11 @@ div.pay-allocation-box-node-id div:nth-child(1) {
 div.pay-allocation-box button {
     margin-right: 0.5em;
 }
+div.allocation-item-button-box {
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+}
+div.allocation-item-button-box button {
+    margin-bottom: 0.5em;
+}

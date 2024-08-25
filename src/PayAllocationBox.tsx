@@ -108,14 +108,20 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
             </div>
             <div className="pay-allocation-box-node-id">
                 <div>Node id:</div>
-                <div><ContractDetails chainId={17000} contractAddress={props.nodeId} isAddress={true}/></div>
+                <div>
+                    <ContractDetails chainId={17000} contractAddress={props.nodeId} isAddress={true}/>
+                </div>
             </div>
             {error && <div>{error}</div>}
-            <PayAllocationBox payAllocation={payAllocation}/>
-            <button disabled={inProgress} onClick={_ => setRequestExtended(true)}>Change allocation</button>
-            <button onClick={e => releaseAllocationClick()}>Release allocation</button>
+            <div style={{display: "flex", flexDirection: "row"}}>
+                <PayAllocationBox payAllocation={payAllocation}/>
+                <div className="allocation-item-button-box">
+                    <button disabled={inProgress} onClick={_ => setRequestExtended(true)}>Change</button>
+                    <button onClick={e => releaseAllocationClick()}>Release</button>
+                </div>
+            </div>
             {requestExtended && <div className={"new-allocation"}>
-                <h3>Extend Allocation</h3>
+                <h3>Change allocation</h3>
                 <div className={"new-allocation-entry"}>
                     <div>Amount:</div>
                     <div>
@@ -136,7 +142,6 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
                 <button disabled={inProgress} onClick={_ => extendAllocationClick()}>Submit changes</button>
                 <button disabled={inProgress} onClick={_ => setRequestExtended(false)}>Cancel changes</button>
             </div>}
-
         </div>
     );
 }
