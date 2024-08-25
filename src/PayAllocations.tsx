@@ -116,9 +116,8 @@ const PayAllocations = () => {
                     </div>
                     <div> {inputValueValidated} GLM</div>
                 </div>
-
                 <div className={"new-allocation-entry"}>
-                    <div>Payment platform:</div>
+                    <div>Payment <br/>platform:</div>
                     <div>
                         <input value={inputPlatform} onChange={e => setInputPlatform(e.target.value)}/>
                     </div>
@@ -134,6 +133,7 @@ const PayAllocations = () => {
                     </div>
                 </div>
                 <button disabled={inProgress} onClick={e => newAllocationClick()}>Submit new</button>
+                <button disabled={inProgress} onClick={e => setEnableNewAllocation(false)}>Cancel</button>
             </div>}
             {!enableNewAllocation && <div className={"new-allocation"}>
                 <button onClick={_ => setEnableNewAllocation(true)}>New Allocation</button>

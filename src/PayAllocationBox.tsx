@@ -18,35 +18,6 @@ interface PayAllocationBoxWrapperProps {
     deletedEvent?: () => void;
 }
 
-/*
-export interface PayAgreementPayment {
-    agreementId: string,
-    amount: string,
-    allocationId: string | null,
-}
-
-export interface PayActivityPayment {
-    activityId: string,
-    amount: string,
-    allocationId: string | null,
-}
-
-export interface PayAllocation {
-    paymentId: string,
-    payerId: string,
-    payeeId: string,
-    payerAddr: string,
-    payeeAddr: string,
-    paymentPlatform: string,
-    amount: string,
-    timestamp: string,
-    agreementPayments: [PayAgreementPayment],
-    activityPayments: [PayActivityPayment],
-    details: string,
-}
-
- */
-
 export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => {
     const {backendSettings} = useContext(BackendSettingsContext);
     const [payAllocation, setPayAllocation] = React.useState<PayAllocation | null>(null);
@@ -55,10 +26,12 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
         try {
             const yagnaServer = getYagnaServerById(backendSettings, props.nodeId);
             const response = await backendFetchYagna(yagnaServer, "/payment-api/v1/allocations/" + props.payAllocationId);
-            const response_json = await response.json();
-            response_json.yagnaServer = yagnaServer;
+            const responseJson = await response.json();
+            responseJson.yagnaServer = yagnaServer;
 
-            setPayAllocation(response_json);
+            setPayAllocation(responseJson);
+            setInputValue(responseJson.totalAmount);
+            setInputTimeout(responseJson.timeout);
             setError(null);
         } catch (e) {
             setError(`Error encountered: ${e}`);
@@ -72,17 +45,16 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
                 method: "PUT",
                 body: JSON.stringify(args),
             });
-            const response_json = await response.json();
-            response_json.yagnaServer = yagnaServer;
+            const responseJson = await response.json();
+            responseJson.yagnaServer = yagnaServer;
 
             setRequestExtended(false);
-            setPayAllocation(response_json);
+            setPayAllocation(responseJson);
             setError(null);
         } catch (e) {
             setError(`Error encountered: ${e}`);
         }
         setInProgress(false);
-
     }
 
     async function releaseAllocation() {

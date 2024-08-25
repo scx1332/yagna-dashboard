@@ -3,6 +3,11 @@ div.new-allocation {
     margin-top: 1em;
     border-bottom: 1px solid #e0e0e0;
 }
+div.new-allocation button {
+    margin-right: 0.5em;
+    margin-top: 0.5em;
+}
+
 div.new-allocation-entry {
     padding: 10px;
     border: 1px solid #e0e0e0;
@@ -17,7 +22,7 @@ pay-allocation-box-node-id-entry {
     font-family: monospace;
 }
 div.new-allocation-entry div:nth-child(1) {
-    min-width: 3.5em;
+    min-width: 5em;
 }
 div.new-allocation-entry div:nth-child(2) {
     min-width: 14em;
