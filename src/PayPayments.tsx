@@ -1,8 +1,8 @@
 import React, { useCallback, useContext, useEffect } from "react";
-import { PayPaymentBox, PayPaymentBoxWrapper} from "./PayPaymentBox";
+import { PayPaymentBoxWrapper} from "./PayPaymentBox";
 import { PayPayment } from "./model/PayPayments";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
-import {backendFetch, backendFetchYagna} from "./common/BackendCall";
+import {backendFetchYagna} from "./common/BackendCall";
 
 interface GetPayPaymentsResponse {
     payPayments: PayPayment[];
@@ -15,7 +15,7 @@ const PayPayments = () => {
     const loadPayPayments = useCallback(async () => {
         let payPayments: PayPayment[] = [];
         for (const yagna_server of backendSettings.yagnaServers) {
-            const response = await backendFetchYagna(yagna_server, "/payment-api/v1/payments");
+            const response = await backendFetchYagna(yagna_server, "/payment-api/v1/payments?timeout=0");
             const response_json = await response.json();
             const payPaymentsLoc = response_json;
             for (const payPayment of payPaymentsLoc) {

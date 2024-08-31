@@ -1,9 +1,9 @@
 import React, {useCallback, useContext, useEffect} from "react";
 import "./PayAllocationBox.css";
 import DateBox from "./DateBox";
-import {AllocationDepositUpdate, PayAllocation, UpdateAllocation} from "./model/PayAllocations";
+import {PayAllocation, UpdateAllocation} from "./model/PayAllocations";
 import {backendFetchYagna} from "./common/BackendCall";
-import {getYagnaServerById, YagnaServer} from "./common/BackendSettings";
+import {getYagnaServerById} from "./common/BackendSettings";
 import {BackendSettingsContext} from "./BackendSettingsProvider";
 import {DateTime} from "luxon";
 import ContractDetails from "./ContractDetails";
@@ -153,22 +153,32 @@ export const PayAllocationBox = (props: PayAllocationBoxProps) => {
     }
 
     return (
-        <div className={"pay-allocation-box-body"}>
-            <div className={"pay-allocation-box-entry-col-left"}>
-                <div className={"pay-allocation-box-entry"} title="payment platform"><b>{props.payAllocation.paymentPlatform}</b></div>
-                <div className={"pay-allocation-box-entry"}>Remaining
-                    amount: <br/><b>{props.payAllocation.remainingAmount} GLM</b></div>
-                <div className={"pay-allocation-box-entry"}>
-                    Spent amount:<br/><b>{props.payAllocation.spentAmount} GLM</b>
+        <div>
+            <div className={"pay-allocation-box-body"}>
+                <div className={"pay-allocation-box-entry-col-left"}>
+                    <div className={"pay-allocation-box-entry"} title="payment platform">
+                        <b>{props.payAllocation.paymentPlatform}</b></div>
+                    <div className={"pay-allocation-box-entry"}>Remaining
+                        amount: <br/><b>{props.payAllocation.remainingAmount} GLM</b></div>
+                    <div className={"pay-allocation-box-entry"}>
+                        Spent amount:<br/><b>{props.payAllocation.spentAmount} GLM</b>
+                    </div>
                 </div>
+                <div className={"pay-allocation-box-entry-col-right"}>
+                    <div className={"pay-allocation-box-entry"}>
+                        Created: <DateBox date={props.payAllocation.timestamp} title={""}/>
+                    </div>
+                    <div className={"pay-allocation-box-entry"}>
+                        Expired: <DateBox date={props.payAllocation.timeout} title={""}/>
+                    </div>
+                </div>
+
             </div>
-            <div className={"pay-allocation-box-entry-col-right"}>
-                <div className={"pay-allocation-box-entry"}>
-                    Created: <DateBox date={props.payAllocation.timestamp} title={""}/>
-                </div>
-                <div className={"pay-allocation-box-entry"}>
-                    Expired: <DateBox date={props.payAllocation.timeout} title={""}/>
-                </div>
+            <div className={"pay-allocation-box-entry-bottom"}>
+                {props.payAllocation.deposit && <div className={"pay-allocation-box-entry"}>
+                    Contract: {props.payAllocation.deposit.contract} <br/>
+                    Id: {props.payAllocation.allocationId}
+                </div>}
             </div>
         </div>
     );
