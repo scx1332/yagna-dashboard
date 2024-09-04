@@ -1,8 +1,8 @@
-import React, {useCallback, useContext, useEffect} from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import "./PayCycleBox.css";
-import {PayCycle} from "./model/PayCycle";
-import {BackendSettingsContext} from "./BackendSettingsProvider";
-import {backendFetch, backendFetchYagna} from "./common/BackendCall";
+import { PayCycle } from "./model/PayCycle";
+import { BackendSettingsContext } from "./BackendSettingsProvider";
+import { backendFetch, backendFetchYagna } from "./common/BackendCall";
 import DateBox from "./DateBox";
 
 interface PayCycleBoxProps {
@@ -11,8 +11,7 @@ interface PayCycleBoxProps {
 }
 
 const PayCycleBox = (props: PayCycleBoxProps) => {
-    const {backendSettings} = useContext(BackendSettingsContext);
-
+    const { backendSettings } = useContext(BackendSettingsContext);
 
     const [intervalInputValue, setIntervalInputValue] = React.useState<string>("");
     const [cronInputValue, setCronInputValue] = React.useState<string>("");
@@ -37,12 +36,11 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
             setIntervalCheckBox(false);
         }
 
-
         if (response_json.cron) {
             setCronInputValue(response_json.cron);
             setCronCheckBox(true);
         } else {
-            setCronInputValue("")
+            setCronInputValue("");
             setCronCheckBox(false);
         }
 
@@ -58,7 +56,7 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
     }, [autoUpdate]);
 
     useEffect(() => {
-        const autoUpdateInterval =  10 * 1000;
+        const autoUpdateInterval = 10 * 1000;
         const interval = setInterval(() => {
             setAutoUpdate(new Date().getTime());
         }, autoUpdateInterval);
@@ -79,19 +77,27 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
         const enable = e.target.checked;
         setIntervalCheckBox(enable);
         setCronCheckBox(!enable);
-    }
+    };
     const cronCheckBoxChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
         const enable = e.target.checked;
         setIntervalCheckBox(!enable);
         setCronCheckBox(enable);
-    }
+    };
 
     useEffect(() => {
         validatePayCycleInterval();
         validateCron();
         validateExtra();
         validateNext();
-    }, [cronCheckBox, intervalCheckBox, intervalInputValue, cronInputValue, extraInputValue, nextInputValue, nextProcessChecked])
+    }, [
+        cronCheckBox,
+        intervalCheckBox,
+        intervalInputValue,
+        cronInputValue,
+        extraInputValue,
+        nextInputValue,
+        nextProcessChecked,
+    ]);
 
     function validatePayCycleInterval() {
         if (!intervalCheckBox) {
@@ -170,11 +176,10 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
             nextUpdate: nextUpdateValid,
         });
         console.log("savePayCycle: ", bodyStr);
-        const response = await backendFetchYagna(backendSettings.yagnaServers[0], "/payment-api/v1/batchCycle",
-            {
-                method: "POST",
-                body: bodyStr,
-            });
+        const response = await backendFetchYagna(backendSettings.yagnaServers[0], "/payment-api/v1/batchCycle", {
+            method: "POST",
+            body: bodyStr,
+        });
         const response_json = await response.json();
         console.log("savePayCycle result: ", response_json);
         setUpdateNo(updateNo + 1);
@@ -183,7 +188,6 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
     useEffect(() => {
         loadPayCycle().then();
     }, [loadPayCycle]);
-
 
     if (props.payCycle == null) {
         return <div>Unknown payCycle</div>;
@@ -205,16 +209,15 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
             const minutes = matches[3] ? parseInt(matches[3], 10) : 0;
             const seconds = matches[4] ? parseInt(matches[4], 10) : 0;
             console.log("parseTimeString: ", days, hours, minutes, seconds);
-            return {days, hours, minutes, seconds};
+            return { days, hours, minutes, seconds };
         }
         throw "Invalid time string";
     }
 
-
     function saveHandler() {
         return async () => {
             await savePayCycle();
-        }
+        };
     }
 
     if (payCycle == null) {
@@ -224,29 +227,35 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
     return (
         <div className={"pay-cycle-box"}>
             <div className={"pay-cycle-box-body"}>
-                <h3>Payment cycle for node id: {payCycle.nodeId} platform: {payCycle.platform}</h3>
+                <h3>
+                    Payment cycle for node id: {payCycle.nodeId} platform: {payCycle.platform}
+                </h3>
                 <table className="pay-cycle-list-table">
                     <thead>
-                    <tr>
-                        <th>Payment platform</th>
-                        <th>Set by interval</th>
-                        <th>Set by cron</th>
-                        <th>Max interval</th>
-                        <th>Extra payment time</th>
-                        <th>Last process</th>
-                        <th>Next process</th>
-                    </tr>
+                        <tr>
+                            <th>Payment platform</th>
+                            <th>Set by interval</th>
+                            <th>Set by cron</th>
+                            <th>Max interval</th>
+                            <th>Extra payment time</th>
+                            <th>Last process</th>
+                            <th>Next process</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>{payCycle.platform}</td>
-                        <td>{payCycle.intervalSec?.toString() ?? "NULL"}</td>
-                        <td>{payCycle.cron ?? "NULL"}</td>
-                        <td>{payCycle.maxIntervalSec?.toString() ?? "NULL"}</td>
-                        <td>{payCycle.extraPayTimeSec.toString()}</td>
-                        <td>{payCycle.lastProcess ? <DateBox date={payCycle.lastProcess} title={""}/> : "NULL"}</td>
-                        <td><DateBox date={payCycle.nextProcess} title={""}/></td>
-                    </tr>
+                        <tr>
+                            <td>{payCycle.platform}</td>
+                            <td>{payCycle.intervalSec?.toString() ?? "NULL"}</td>
+                            <td>{payCycle.cron ?? "NULL"}</td>
+                            <td>{payCycle.maxIntervalSec?.toString() ?? "NULL"}</td>
+                            <td>{payCycle.extraPayTimeSec.toString()}</td>
+                            <td>
+                                {payCycle.lastProcess ? <DateBox date={payCycle.lastProcess} title={""} /> : "NULL"}
+                            </td>
+                            <td>
+                                <DateBox date={payCycle.nextProcess} title={""} />
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -254,67 +263,69 @@ const PayCycleBox = (props: PayCycleBoxProps) => {
             <div className={editMode ? "pay-cycle-edit" : "pay-cycle-edit-hidden"}>
                 <div className="pay-cycle-edit-entry">
                     <div>
-                        <input checked={intervalCheckBox} type="checkbox" onChange={(e) => intervalCheckBoxChanged(e)}/>
+                        <input
+                            checked={intervalCheckBox}
+                            type="checkbox"
+                            onChange={(e) => intervalCheckBoxChanged(e)}
+                        />
                     </div>
+                    <div>Interval</div>
                     <div>
-                        Interval
+                        <input
+                            disabled={!intervalCheckBox}
+                            value={intervalInputValue}
+                            onChange={(e) => setIntervalInputValue(e.target.value)}
+                        ></input>
                     </div>
-                    <div>
-                        <input disabled={!intervalCheckBox} value={intervalInputValue}
-                               onChange={(e) => setIntervalInputValue(e.target.value)}></input></div>
-                    <div>
-                        {payCycleIntervalValid}
-                    </div>
+                    <div>{payCycleIntervalValid}</div>
                 </div>
                 <div className="pay-cycle-edit-entry">
                     <div>
-                        <input checked={cronCheckBox} type="checkbox" onChange={(e) => cronCheckBoxChanged(e)}/>
+                        <input checked={cronCheckBox} type="checkbox" onChange={(e) => cronCheckBoxChanged(e)} />
                     </div>
+                    <div>Cron:</div>
                     <div>
-                        Cron:
+                        <input
+                            disabled={!cronCheckBox}
+                            value={cronInputValue}
+                            onChange={(e) => setCronInputValue(e.target.value)}
+                        ></input>
                     </div>
-                    <div>
-                        <input disabled={!cronCheckBox} value={cronInputValue}
-                               onChange={(e) => setCronInputValue(e.target.value)}></input></div>
-                    <div>
-                        {cronInputValid}
-                    </div>
+                    <div>{cronInputValid}</div>
                 </div>
                 <div className="pay-cycle-edit-entry">
-                    <div>
-
-                    </div>
-                    <div>
-                        Extra payment time:
-                    </div>
+                    <div></div>
+                    <div>Extra payment time:</div>
                     <div>
                         <input value={extraInputValue} onChange={(e) => setExtraInputValue(e.target.value)}></input>
                     </div>
-                    <div>
-                        {extraValid}
-                    </div>
+                    <div>{extraValid}</div>
                 </div>
                 <div className="pay-cycle-edit-entry">
                     <div>
-                    <input checked={nextProcessChecked} type="checkbox" onChange={(e) => setNextProcessChecked(e.target.checked)}/>
+                        <input
+                            checked={nextProcessChecked}
+                            type="checkbox"
+                            onChange={(e) => setNextProcessChecked(e.target.checked)}
+                        />
                     </div>
+                    <div>Overwrite next process:</div>
                     <div>
-                        Overwrite next process:
+                        <input
+                            disabled={!nextProcessChecked}
+                            value={nextInputValue}
+                            onChange={(e) => setNextInputValue(e.target.value)}
+                        ></input>
                     </div>
-                    <div>
-                        <input disabled={!nextProcessChecked} value={nextInputValue} onChange={(e) => setNextInputValue(e.target.value)}></input>
-                    </div>
-                    <div>
-                        {nextUpdateValid}
-                    </div>
+                    <div>{nextUpdateValid}</div>
                 </div>
             </div>
 
             <div className={"pay-cycle-button-row"}>
                 <button>Run process now</button>
-                {!editMode && <button onClick={_e => setEditMode(true)}>Edit</button>}
+                {!editMode && <button onClick={(_e) => setEditMode(true)}>Edit</button>}
                 {editMode && <button onClick={saveHandler()}>Save</button>}
-                {editMode && <button onClick={_e => setEditMode(false)}>Cancel</button>}
+                {editMode && <button onClick={(_e) => setEditMode(false)}>Cancel</button>}
             </div>
         </div>
     );

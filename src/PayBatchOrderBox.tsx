@@ -1,9 +1,9 @@
-import React, {useCallback, useContext, useEffect} from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import "./PayBatchOrderBox.css";
 import DateBox from "./DateBox";
-import {BatchOrder, BatchOrderItem, BatchOrderItemDocument} from "./model/Batch";
-import {BackendSettingsContext} from "./BackendSettingsProvider";
-import {backendFetch} from "./common/BackendCall";
+import { BatchOrder, BatchOrderItem, BatchOrderItemDocument } from "./model/Batch";
+import { BackendSettingsContext } from "./BackendSettingsProvider";
+import { backendFetch } from "./common/BackendCall";
 import AgreementIdBox from "./AgreementIdBox";
 import ActivityIdBox from "./ActivityIdBox";
 
@@ -19,7 +19,6 @@ interface BatchOrderItemEntry {
 interface GetBatchOrderItemsResponse {
     orderItemEntries: BatchOrderItemEntry[];
 }
-
 
 const BatchOrderBox = (props: BatchOrderBoxProps) => {
     const { backendSettings } = useContext(BackendSettingsContext);
@@ -38,7 +37,7 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
             const response_json = await response.json();
             const entries = [];
             for (const entry of response_json) {
-                entries.push({batchOrderItem: entry, details: null});
+                entries.push({ batchOrderItem: entry, details: null });
             }
             if (props.loadBatchOrderItems && entries != null) {
                 for (let i = 0; i < entries.length; i++) {
@@ -55,8 +54,7 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                 );
                 const response_json = await response.json();
             }
-            setBatchOrderItems({"orderItemEntries":entries});
-
+            setBatchOrderItems({ orderItemEntries: entries });
         }
     }, [props.loadBatchOrderItems]);
 
@@ -64,8 +62,6 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
         setBatchOrderItems(null);
         Promise.all([loadBatchOrders()]).then();
     }, [loadBatchOrders]);
-
-
 
     const listBatchOrderItems = () => {
         if (batchOrderItems == null) {
@@ -79,38 +75,44 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                 <div className="batch-order-list-title">Payees</div>
                 <table className="batch-order-list-table">
                     <thead>
-                    <tr>
-                        <th>Payee Addr</th>
-                        <th>Amount</th>
-                        <th>Driver payment ID</th>
-                        <th>Is paid</th>
-                        <th>Agreement</th>
-                        <th>Activity</th>
-                    </tr>
+                        <tr>
+                            <th>Payee Addr</th>
+                            <th>Amount</th>
+                            <th>Driver payment ID</th>
+                            <th>Is paid</th>
+                            <th>Agreement</th>
+                            <th>Activity</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {batchOrderItems.orderItemEntries.map((batchOrderItemEntry: BatchOrderItemEntry, i: number) => (
-                        <React.Fragment key={i}>
-                            <tr>
-                                <td>{batchOrderItemEntry.batchOrderItem.payeeAddr}</td>
-                                <td><b>{batchOrderItemEntry.batchOrderItem.amount}</b></td>
-                                <td>{batchOrderItemEntry.batchOrderItem.paymentId}</td>
-                                <td>{batchOrderItemEntry.batchOrderItem.paid ? "paid" : "not paid"}</td>
-                            </tr>
-
-                            {batchOrderItemEntry.details != null && (batchOrderItemEntry.details.map((detail: BatchOrderItemDocument, j: number) => (
-                                <tr key={j + 1000}>
-                                    <td></td>
-                                    <td>{detail.amount}</td>
+                        {batchOrderItems.orderItemEntries.map((batchOrderItemEntry: BatchOrderItemEntry, i: number) => (
+                            <React.Fragment key={i}>
+                                <tr>
+                                    <td>{batchOrderItemEntry.batchOrderItem.payeeAddr}</td>
+                                    <td>
+                                        <b>{batchOrderItemEntry.batchOrderItem.amount}</b>
+                                    </td>
                                     <td>{batchOrderItemEntry.batchOrderItem.paymentId}</td>
-                                    <td>{batchOrderItemEntry.batchOrderItem.paid}</td>
-                                    <td><AgreementIdBox agreementId={detail.agreement_id}/></td>
-                                    <td><ActivityIdBox activityId={detail.activity_id}/></td>
+                                    <td>{batchOrderItemEntry.batchOrderItem.paid ? "paid" : "not paid"}</td>
+                                </tr>
 
-                                </tr>)))}
-                        </React.Fragment>
-                    ))}
-
+                                {batchOrderItemEntry.details != null &&
+                                    batchOrderItemEntry.details.map((detail: BatchOrderItemDocument, j: number) => (
+                                        <tr key={j + 1000}>
+                                            <td></td>
+                                            <td>{detail.amount}</td>
+                                            <td>{batchOrderItemEntry.batchOrderItem.paymentId}</td>
+                                            <td>{batchOrderItemEntry.batchOrderItem.paid}</td>
+                                            <td>
+                                                <AgreementIdBox agreementId={detail.agreement_id} />
+                                            </td>
+                                            <td>
+                                                <ActivityIdBox activityId={detail.activity_id} />
+                                            </td>
+                                        </tr>
+                                    ))}
+                            </React.Fragment>
+                        ))}
                     </tbody>
                 </table>
             </div>
@@ -122,14 +124,14 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                 <h3>Payment cycle (batch order) id: {props.batchOrder.id}</h3>
                 <table className="batch-order-list-table">
                     <thead>
-                    <tr>
-                        <th>Owner ID</th>
-                        <th>Timestamp</th>
-                        <th>Total amount</th>
-                        <th>Paid amount</th>
-                        <th>Is paid</th>
-                        <th>Payment platform</th>
-                    </tr>
+                        <tr>
+                            <th>Owner ID</th>
+                            <th>Timestamp</th>
+                            <th>Total amount</th>
+                            <th>Paid amount</th>
+                            <th>Is paid</th>
+                            <th>Payment platform</th>
+                        </tr>
                     </thead>
                     <tbody>
                         <tr>
@@ -144,7 +146,6 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                 </table>
 
                 {listBatchOrderItems()}
-
             </div>
         </div>
     );

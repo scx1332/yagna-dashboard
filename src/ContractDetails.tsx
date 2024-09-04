@@ -1,5 +1,4 @@
 import React from "react";
-import ChainSetup from "./model/ChainSetup";
 import { FiExternalLink } from "react-icons/fi";
 import "./ContractDetails.css";
 
@@ -10,14 +9,13 @@ interface ContractDetailsProps {
 }
 
 const ContractDetails = (props: ContractDetailsProps) => {
-
     const chainId = typeof props.chainId === "string" ? parseInt(props.chainId) : props.chainId;
     const chainSetup = {
         multiContractAddress: "N/A",
         glmAddress: "N/A",
         currencyGlmSymbol: "GLM",
         blockExplorerUrl: "https://holesky.etherscan.io",
-    }
+    };
     if (!chainSetup) {
         return <span>No {chainId} in config</span>;
     }

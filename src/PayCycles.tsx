@@ -1,8 +1,8 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import { backendFetch } from "./common/BackendCall";
-import PayCycleBox  from "./PayCycleBox";
-import {PayCycle} from "./model/PayCycle";
+import PayCycleBox from "./PayCycleBox";
+import { PayCycle } from "./model/PayCycle";
 
 interface GetPayCyclesResponse {
     payCycles: PayCycle[];

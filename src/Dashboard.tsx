@@ -4,7 +4,6 @@ import "./Dashboard.css";
 import { Routes, Route, Link } from "react-router-dom";
 import BackendSettings from "./BackendSettings";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
-import Invoices from "./Invoices";
 import PayAgreements from "./PayAgreements";
 import PayActivities from "./PayActivities";
 import BatchOrders from "./PayBatchOrders";
@@ -44,9 +43,7 @@ const Dashboard = () => {
                             <div>
                                 <div>
                                     <div className={"padding"}>
-                                        <p>
-                                            Connected to payment driver API url:{" "}
-                                        </p>
+                                        <p>Connected to payment driver API url: </p>
                                     </div>
                                 </div>
                             </div>

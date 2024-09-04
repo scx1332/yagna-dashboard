@@ -1,10 +1,7 @@
 import React, { useCallback, useContext, useEffect } from "react";
-import InvoiceBox from "./InvoiceBox";
-import Invoice from "./model/Invoice";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import { backendFetch } from "./common/BackendCall";
-import {BatchOrder, BatchOrderItem} from "./model/Batch";
-import DebitNote from "./model/DebitNote";
+import { BatchOrder } from "./model/Batch";
 import BatchOrderBox from "./PayBatchOrderBox";
 
 interface GetBatchOrdersResponse {

@@ -8,7 +8,7 @@ export interface YagnaVersion {
 }
 
 export interface YagnaIdentity {
-    identity: string,
-    name: string,
-    role: string,
+    identity: string;
+    name: string;
+    role: string;
 }

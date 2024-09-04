@@ -1,6 +1,6 @@
 div.batch-order-box {
     padding: 5px;
-    border: 2px solid #00FF00;
+    border: 2px solid #00ff00;
     margin-bottom: 2em;
 }
 
@@ -52,7 +52,6 @@ div.pay-cycle-edit-entry {
     align-items: center;
 }
 div.pay-cycle-edit-entry div {
-
 }
 div.pay-cycle-edit-entry div:nth-child(1) {
     min-width: 2em;
@@ -84,4 +83,3 @@ table.pay-cycle-list-table td {
     padding: 5px;
     border: 1px solid #e0e0e0;
 }
-

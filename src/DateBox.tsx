@@ -37,7 +37,6 @@ const DateBox = (props: DateBoxProps) => {
         if (luxonDate < dateNow) {
             const interval = Interval.fromDateTimes(luxonDate, dateNow);
 
-
             if (interval.length("days") > 3) {
                 message = Math.floor(interval.length("days")) + " days ago";
             } else if (interval.length("hours") > 3) {
@@ -49,7 +48,6 @@ const DateBox = (props: DateBoxProps) => {
             }
         } else {
             const interval = Interval.fromDateTimes(dateNow, luxonDate);
-
 
             if (interval.length("days") > 3) {
                 message = "in " + Math.floor(interval.length("days")) + " days";

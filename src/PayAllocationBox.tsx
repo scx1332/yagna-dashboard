@@ -1,15 +1,16 @@
-import React, {useCallback, useContext, useEffect} from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import "./PayAllocationBox.css";
 import DateBox from "./DateBox";
-import {PayAllocation, UpdateAllocation} from "./model/PayAllocations";
-import {backendFetchYagna} from "./common/BackendCall";
-import {getYagnaServerById} from "./common/BackendSettings";
-import {BackendSettingsContext} from "./BackendSettingsProvider";
-import {DateTime} from "luxon";
+import { PayAllocation, PayAllocationExpenditure, UpdateAllocation } from "./model/PayAllocations";
+import { backendFetchYagna } from "./common/BackendCall";
+import { getYagnaServerById } from "./common/BackendSettings";
+import { BackendSettingsContext } from "./BackendSettingsProvider";
+import { DateTime } from "luxon";
 import ContractDetails from "./ContractDetails";
 
 interface PayAllocationBoxProps {
     payAllocation: PayAllocation | null;
+    payAllocationExpenditures: PayAllocationExpenditure[] | null;
 }
 
 interface PayAllocationBoxWrapperProps {
@@ -19,19 +20,30 @@ interface PayAllocationBoxWrapperProps {
 }
 
 export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => {
-    const {backendSettings} = useContext(BackendSettingsContext);
+    const { backendSettings } = useContext(BackendSettingsContext);
     const [payAllocation, setPayAllocation] = React.useState<PayAllocation | null>(null);
+    const [payAllocationExpenditures, setPayAllocationExpenditures] = React.useState<PayAllocationExpenditure[] | null>(
+        null,
+    );
     const [error, setError] = React.useState<string | null>(null);
     const loadPayAllocation = useCallback(async () => {
         try {
             const yagnaServer = getYagnaServerById(backendSettings, props.nodeId);
-            const response = await backendFetchYagna(yagnaServer, "/payment-api/v1/allocations/" + props.payAllocationId);
-            const responseJson = await response.json();
+            let response = await backendFetchYagna(yagnaServer, "/payment-api/v1/allocations/" + props.payAllocationId);
+            let responseJson = await response.json();
             responseJson.yagnaServer = yagnaServer;
 
             setPayAllocation(responseJson);
             setInputValue(responseJson.totalAmount);
             setInputTimeout(responseJson.timeout);
+
+            response = await backendFetchYagna(
+                yagnaServer,
+                "/payment-api/v1/allocations/" + props.payAllocationId + "/expenditures",
+            );
+            responseJson = await response.json();
+            setPayAllocationExpenditures(responseJson);
+
             setError(null);
         } catch (e) {
             setError(`Error encountered: ${e}`);
@@ -41,10 +53,14 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
     async function extendAllocation(args: UpdateAllocation) {
         try {
             const yagnaServer = getYagnaServerById(backendSettings, props.nodeId);
-            const response = await backendFetchYagna(yagnaServer, "/payment-api/v1/allocations/" + props.payAllocationId, {
-                method: "PUT",
-                body: JSON.stringify(args),
-            });
+            const response = await backendFetchYagna(
+                yagnaServer,
+                "/payment-api/v1/allocations/" + props.payAllocationId,
+                {
+                    method: "PUT",
+                    body: JSON.stringify(args),
+                },
+            );
             const responseJson = await response.json();
             responseJson.yagnaServer = yagnaServer;
 
@@ -60,9 +76,13 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
     async function releaseAllocation() {
         try {
             const yagnaServer = getYagnaServerById(backendSettings, props.nodeId);
-            const response = await backendFetchYagna(yagnaServer, "/payment-api/v1/allocations/" + props.payAllocationId, {
-                method: "DELETE",
-            });
+            const response = await backendFetchYagna(
+                yagnaServer,
+                "/payment-api/v1/allocations/" + props.payAllocationId,
+                {
+                    method: "DELETE",
+                },
+            );
             await response.json();
             setError(null);
             props.deletedEvent && props.deletedEvent();
@@ -77,7 +97,7 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
         }
     }
     const [inputValue, setInputValue] = React.useState<string>("10.0");
-    const [inputTimeout, setInputTimeout] = React.useState<string>(DateTime.now().plus({hour: 1}).toISO());
+    const [inputTimeout, setInputTimeout] = React.useState<string>(DateTime.now().plus({ hour: 1 }).toISO());
 
     const [inputValueValidated, setInputValueValidated] = React.useState<string>("");
     const [inputTimeoutValidated, setInputTimeoutValidated] = React.useState<string>("");
@@ -93,7 +113,7 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
             totalAmount: inputValueValidated,
             timeout: inputTimeoutValidated,
             deposit: null,
-        }).then()
+        }).then();
     }
     const [requestExtended, setRequestExtended] = React.useState<boolean>(false);
 
@@ -109,42 +129,50 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
             <div className="pay-allocation-box-node-id">
                 <div>Node id:</div>
                 <div>
-                    <ContractDetails chainId={17000} contractAddress={props.nodeId} isAddress={true}/>
+                    <ContractDetails chainId={17000} contractAddress={props.nodeId} isAddress={true} />
                 </div>
             </div>
             {error && <div>{error}</div>}
-            <div style={{display: "flex", flexDirection: "row"}}>
-                <PayAllocationBox payAllocation={payAllocation}/>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+                <PayAllocationBox payAllocation={payAllocation} payAllocationExpenditures={payAllocationExpenditures} />
                 <div className="allocation-item-button-box">
-                    <button disabled={requestExtended} onClick={_ => setRequestExtended(true)}>Change</button>
-                    <button onClick={e => releaseAllocationClick()}>Release</button>
+                    <button disabled={requestExtended} onClick={(_) => setRequestExtended(true)}>
+                        Change
+                    </button>
+                    <button onClick={(e) => releaseAllocationClick()}>Release</button>
                 </div>
             </div>
-            {requestExtended && <div className={"change-allocation"}>
-                <h4>Change allocation</h4>
-                <div className={"change-allocation-entry"}>
-                    <div>Amount:</div>
-                    <div>
-                        <input value={inputValue} onChange={e => setInputValue(e.target.value)}/>
+            {requestExtended && (
+                <div className={"change-allocation"}>
+                    <h4>Change allocation</h4>
+                    <div className={"change-allocation-entry"}>
+                        <div>Amount:</div>
+                        <div>
+                            <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+                        </div>
+                        <div> {inputValueValidated} GLM</div>
                     </div>
-                    <div> {inputValueValidated} GLM</div>
-                </div>
 
-                <div className={"change-allocation-entry"}>
-                    <div>Timeout:</div>
-                    <div>
-                        <input value={inputTimeout} onChange={e => setInputTimeout(e.target.value)}/>
+                    <div className={"change-allocation-entry"}>
+                        <div>Timeout:</div>
+                        <div>
+                            <input value={inputTimeout} onChange={(e) => setInputTimeout(e.target.value)} />
+                        </div>
+                        <div>
+                            <DateBox date={inputTimeoutValidated} title={""} />
+                        </div>
                     </div>
-                    <div>
-                        <DateBox date={inputTimeoutValidated} title={""}/>
-                    </div>
+                    <button disabled={inProgress} onClick={(_) => extendAllocationClick()}>
+                        Submit changes
+                    </button>
+                    <button disabled={inProgress} onClick={(_) => setRequestExtended(false)}>
+                        Cancel changes
+                    </button>
                 </div>
-                <button disabled={inProgress} onClick={_ => extendAllocationClick()}>Submit changes</button>
-                <button disabled={inProgress} onClick={_ => setRequestExtended(false)}>Cancel changes</button>
-            </div>}
+            )}
         </div>
     );
-}
+};
 
 export const PayAllocationBox = (props: PayAllocationBoxProps) => {
     //const [config] = useConfig();
@@ -157,29 +185,54 @@ export const PayAllocationBox = (props: PayAllocationBoxProps) => {
             <div className={"pay-allocation-box-body"}>
                 <div className={"pay-allocation-box-entry-col-left"}>
                     <div className={"pay-allocation-box-entry"} title="payment platform">
-                        <b>{props.payAllocation.paymentPlatform}</b></div>
-                    <div className={"pay-allocation-box-entry"}>Remaining
-                        amount: <br/><b>{props.payAllocation.remainingAmount} GLM</b></div>
+                        <b>{props.payAllocation.paymentPlatform}</b>
+                    </div>
                     <div className={"pay-allocation-box-entry"}>
-                        Spent amount:<br/><b>{props.payAllocation.spentAmount} GLM</b>
+                        Remaining amount: <br />
+                        <b>{props.payAllocation.remainingAmount} GLM</b>
+                    </div>
+                    <div className={"pay-allocation-box-entry"}>
+                        Spent amount:
+                        <br />
+                        <b>{props.payAllocation.spentAmount} GLM</b>
                     </div>
                 </div>
                 <div className={"pay-allocation-box-entry-col-right"}>
                     <div className={"pay-allocation-box-entry"}>
-                        Created: <DateBox date={props.payAllocation.timestamp} title={""}/>
+                        Created: <DateBox date={props.payAllocation.timestamp} title={""} />
                     </div>
                     <div className={"pay-allocation-box-entry"}>
-                        Expired: <DateBox date={props.payAllocation.timeout} title={""}/>
+                        Expired: <DateBox date={props.payAllocation.timeout} title={""} />
                     </div>
                 </div>
+            </div>
+            {props.payAllocation.deposit && (
+                <div className={"pay-allocation-box-entry-bottom"}>
+                    <div className={"pay-allocation-box-entry-bottom-inner"}>
+                        <div className={"pay-allocation-box-entry"}>
+                            Contract: {props.payAllocation.deposit.contract} <br />
+                            Id: {props.payAllocation.allocationId}
+                        </div>
+                    </div>
+                </div>
+            )}
 
-            </div>
-            <div className={"pay-allocation-box-entry-bottom"}>
-                {props.payAllocation.deposit && <div className={"pay-allocation-box-entry"}>
-                    Contract: {props.payAllocation.deposit.contract} <br/>
-                    Id: {props.payAllocation.allocationId}
-                </div>}
-            </div>
+            {props.payAllocationExpenditures && (
+                <div className={"pay-allocation-box-entry-bottom"}>
+                    {props.payAllocationExpenditures.map((expenditure, index) => {
+                        return (
+                            <div key={index} className={"pay-allocation-box-entry-bottom-inner"}>
+                                <div className={"pay-allocation-box-entry"}>
+                                    Agreement: {expenditure.agreementId} <br />
+                                    Activity: {expenditure.activityId} <br />
+                                    Accepted: {expenditure.acceptedAmount} GLM <br />
+                                    Scheduled: {expenditure.scheduledAmount} GLM
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 };

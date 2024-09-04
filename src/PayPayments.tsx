@@ -1,8 +1,8 @@
 import React, { useCallback, useContext, useEffect } from "react";
-import { PayPaymentBoxWrapper} from "./PayPaymentBox";
+import { PayPaymentBoxWrapper } from "./PayPaymentBox";
 import { PayPayment } from "./model/PayPayments";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
-import {backendFetchYagna} from "./common/BackendCall";
+import { backendFetchYagna } from "./common/BackendCall";
 
 interface GetPayPaymentsResponse {
     payPayments: PayPayment[];
@@ -24,14 +24,22 @@ const PayPayments = () => {
             payPayments = payPayments.concat(payPaymentsLoc);
         }
         //sort by timestamp
-        const payPaymentsSorted = payPayments.sort((a: PayPayment, b: PayPayment) => {
-            return a.timestamp.localeCompare(b.timestamp);
-        }).reverse();
+        const payPaymentsSorted = payPayments
+            .sort((a: PayPayment, b: PayPayment) => {
+                return a.timestamp.localeCompare(b.timestamp);
+            })
+            .reverse();
         setPayPayments({ payPayments: payPaymentsSorted });
     }, []);
 
     function row(payPayment: PayPayment, i: number) {
-        return <PayPaymentBoxWrapper key={i} payPaymentId={payPayment.paymentId} nodeId={payPayment.yagnaServer.identity} />;
+        return (
+            <PayPaymentBoxWrapper
+                key={i}
+                payPaymentId={payPayment.paymentId}
+                nodeId={payPayment.yagnaServer.identity}
+            />
+        );
     }
 
     useEffect(() => {

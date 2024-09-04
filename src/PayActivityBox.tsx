@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import "./PayActivityBox.css";
 import PayActivity from "./model/PayActivity";
-import {backendFetch, backendFetchYagna} from "./common/BackendCall";
+import { backendFetch, backendFetchYagna } from "./common/BackendCall";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import DebitNote from "./model/DebitNote";
 import Invoice from "./model/Invoice";
@@ -27,8 +27,6 @@ interface GetOrderItemsResponse {
     orderItems: any;
 }
 
-
-
 const PayActivityBox = (props: PayActivityBoxProps) => {
     const { backendSettings } = useContext(BackendSettingsContext);
 
@@ -43,7 +41,7 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                     `/payment-api/v1/payActivities/${props.payActivity.id}/debitNotes`,
                 );
                 const response_json = await response.json();
-                setDebitNotes({debitNotes: response_json});
+                setDebitNotes({ debitNotes: response_json });
             }
         }
     }, [props.loadDebitNotes]);
@@ -58,7 +56,7 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                     `/payment-api/v1/payActivities/${props.payActivity.id}/invoice`,
                 );
                 const response_json = await response.json();
-                setInvoice({invoice: response_json});
+                setInvoice({ invoice: response_json });
             }
         }
     }, [props.loadDebitNotes]);
@@ -74,7 +72,7 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                     `/activity-api/v1/activity/${props.payActivity.id}/state`,
                 );
                 const response_json = await response.json();
-                setActivityState({state: response_json});
+                setActivityState({ state: response_json });
             }
         }
     }, [props.loadActivityState]);
@@ -90,7 +88,7 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                     `/payment-api/v1/payActivities/${props.payActivity.id}/orders`,
                 );
                 const response_json = await response.json();
-                setActivityOrderItems({orderItems: response_json});
+                setActivityOrderItems({ orderItems: response_json });
             }
         }
     }, [props.loadOrderItems]);
@@ -129,7 +127,9 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                         {debitNotes.debitNotes.map((debitNote: DebitNote, i: number) => (
                             <tr key={i}>
                                 <td>{debitNote.debitNonce}</td>
-                                <td><span title={debitNote.debitNoteId}>{debitNote.debitNoteId.substring(0, 8)}</span></td>
+                                <td>
+                                    <span title={debitNote.debitNoteId}>{debitNote.debitNoteId.substring(0, 8)}</span>
+                                </td>
                                 <td>{debitNote.totalAmountDue}</td>
                                 <td>{debitNote.status}</td>
                                 <td>{debitNote.timestamp}</td>
@@ -149,7 +149,8 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
         if (activityOrderItems.orderItems.length === 0) {
             return <div className="debit-note-list">No order items</div>;
         }
-        return <div className="debit-note-list">
+        return (
+            <div className="debit-note-list">
                 <div className="debit-note-list-title">Order items</div>
                 <table className="debit-note-list-table">
                     <thead>
@@ -180,20 +181,24 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                     </tbody>
                 </table>
             </div>
-    }
-
+        );
+    };
 
     const renderActivityState = (activityState: GetActivityStateResponse | null) => {
         if (activityState == null || !activityState.state) {
             return <div className="activity-state-info">Activity state not loaded</div>;
         }
         //check if array
-        if ( Array.isArray(activityState.state.state) ) {
+        if (Array.isArray(activityState.state.state)) {
             const states = activityState.state.state;
 
-            return <div>State pair: [{states[0]}, {states[1]}]</div>
+            return (
+                <div>
+                    State pair: [{states[0]}, {states[1]}]
+                </div>
+            );
         }
-    }
+    };
 
     const renderInvoice = (invoice: GetInvoiceResponse | null) => {
         if (invoice == null) {
@@ -233,7 +238,7 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
 
     return (
         <div className={"pay-activity-box"}>
-            <button onClick={handleReloadButtonClick} >Reload</button>
+            <button onClick={handleReloadButtonClick}>Reload</button>
             <div className={"pay-activity-box-body"}>
                 <div className={"pay-activity-id"}>
                     Amounts for activity with id <b>{props.payActivity.id}</b> (Role: {props.payActivity.role}):
@@ -242,20 +247,20 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
 
                 <table className="pay-activity-amount-table">
                     <thead>
-                    <tr>
-                        <th>Due</th>
-                        <th>Accepted</th>
-                        <th>Scheduled</th>
-                        <th>Paid</th>
-                    </tr>
+                        <tr>
+                            <th>Due</th>
+                            <th>Accepted</th>
+                            <th>Scheduled</th>
+                            <th>Paid</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>{props.payActivity.totalAmountDue}</td>
-                        <td>{props.payActivity.totalAmountAccepted}</td>
-                        <td>{props.payActivity.totalAmountScheduled}</td>
-                        <td>{props.payActivity.totalAmountPaid}</td>
-                    </tr>
+                        <tr>
+                            <td>{props.payActivity.totalAmountDue}</td>
+                            <td>{props.payActivity.totalAmountAccepted}</td>
+                            <td>{props.payActivity.totalAmountScheduled}</td>
+                            <td>{props.payActivity.totalAmountPaid}</td>
+                        </tr>
                     </tbody>
                 </table>
                 {renderActivityState(activityState)}
@@ -268,8 +273,6 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                 {listOrderItems()}
 
                 {listDebitNotes()}
-
-
             </div>
         </div>
     );

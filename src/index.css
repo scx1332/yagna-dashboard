@@ -15,7 +15,9 @@ code {
     background-color: #333333;
 }
 
-button, input[type="submit"], input[type="button"] {
+button,
+input[type="submit"],
+input[type="button"] {
     padding: 0.5em 1.5em;
     font-family: Roboto;
     text-transform: uppercase;

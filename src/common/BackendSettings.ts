@@ -14,9 +14,8 @@ export default interface BackendSettings {
     yagnaServers: YagnaServer[];
 }
 
-
 export function getYagnaServerById(settings: BackendSettings, id: string): YagnaServer {
-    const entries =  settings.yagnaServers.filter(server => server.identity === id);
+    const entries = settings.yagnaServers.filter((server) => server.identity === id);
     if (entries.length === 0) {
         throw new Error("No server found with id: " + id);
     }
@@ -26,4 +25,3 @@ export function getYagnaServerById(settings: BackendSettings, id: string): Yagna
     });
     return entriesSorted[0];
 }
-

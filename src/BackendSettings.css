@@ -32,7 +32,6 @@ div.yagna-server-entry-button-list button {
 table.yagna-node-table {
     width: 100%;
     border-collapse: collapse;
-
 }
 
 table.yagna-node-table th {
@@ -46,4 +45,3 @@ table.yagna-node-table td {
     border: 1px solid #ddd;
     padding: 8px;
 }
-

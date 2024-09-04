@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import "./PayAgreementBox.css";
 import PayAgreement from "./model/PayAgreement";
-import {backendFetch, backendFetchYagna} from "./common/BackendCall";
+import { backendFetch, backendFetchYagna } from "./common/BackendCall";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import PayActivity from "./model/PayActivity";
 import PayActivityBox from "./PayActivityBox";
@@ -19,7 +19,6 @@ interface GetActivitiesResponse {
 interface GetOrderItemsResponse {
     orderItems: any;
 }
-
 
 const PayAgreementBox = (props: PayAgreementBoxProps) => {
     const { backendSettings } = useContext(BackendSettingsContext);
@@ -56,7 +55,6 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
         }
     }, [props.loadOrderItems]);
 
-
     useEffect(() => {
         Promise.all([loadActivities(), loadAgreementOrderItems()]).then();
     }, [loadActivities, loadAgreementOrderItems]);
@@ -78,7 +76,8 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
                                 loadOrderItems={true}
                                 loadDebitNotes={true}
                                 loadActivityState={true}
-                                payActivity={activity} />
+                                payActivity={activity}
+                            />
                         </div>
                     ))}
                 </div>
@@ -93,38 +92,40 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
         if (agreementOrderItems.orderItems.length === 0) {
             return <div className="debit-note-list">No order items</div>;
         }
-        return <div className="debit-note-list">
-            <div className="debit-note-list-title">Order items</div>
-            <table className="debit-note-list-table">
-                <thead>
-                <tr>
-                    <th>Order id</th>
-                    <th>Owner id</th>
-                    <th>Payee address</th>
-                    <th>Amount</th>
-                    <th>Agreement id</th>
-                    <th>Invoice id</th>
-                    <th>Activity id</th>
-                    <th>Debit note id</th>
-                </tr>
-                </thead>
-                <tbody>
-                {agreementOrderItems.orderItems.map((orderItem: any, i: number) => (
-                    <tr key={i}>
-                        <td>{orderItem.order_id}</td>
-                        <td>{orderItem.owner_id}</td>
-                        <td>{orderItem.payee_addr}</td>
-                        <td>{orderItem.amount}</td>
-                        <td>{orderItem.agreement_id}</td>
-                        <td>{orderItem.invoice_id}</td>
-                        <td>{orderItem.activity_id}</td>
-                        <td>{orderItem.debit_note_id}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-        </div>
-    }
+        return (
+            <div className="debit-note-list">
+                <div className="debit-note-list-title">Order items</div>
+                <table className="debit-note-list-table">
+                    <thead>
+                        <tr>
+                            <th>Order id</th>
+                            <th>Owner id</th>
+                            <th>Payee address</th>
+                            <th>Amount</th>
+                            <th>Agreement id</th>
+                            <th>Invoice id</th>
+                            <th>Activity id</th>
+                            <th>Debit note id</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {agreementOrderItems.orderItems.map((orderItem: any, i: number) => (
+                            <tr key={i}>
+                                <td>{orderItem.order_id}</td>
+                                <td>{orderItem.owner_id}</td>
+                                <td>{orderItem.payee_addr}</td>
+                                <td>{orderItem.amount}</td>
+                                <td>{orderItem.agreement_id}</td>
+                                <td>{orderItem.invoice_id}</td>
+                                <td>{orderItem.activity_id}</td>
+                                <td>{orderItem.debit_note_id}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        );
+    };
 
     return (
         <div className={"pay-agreement-box"}>
@@ -134,20 +135,20 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
 
                 <table className="pay-agreement-amount-table">
                     <thead>
-                    <tr>
-                        <th>Due</th>
-                        <th>Accepted</th>
-                        <th>Scheduled</th>
-                        <th>Paid</th>
-                    </tr>
+                        <tr>
+                            <th>Due</th>
+                            <th>Accepted</th>
+                            <th>Scheduled</th>
+                            <th>Paid</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>{props.payAgreement.totalAmountDue}</td>
-                        <td>{props.payAgreement.totalAmountAccepted}</td>
-                        <td>{props.payAgreement.totalAmountScheduled}</td>
-                        <td>{props.payAgreement.totalAmountPaid}</td>
-                    </tr>
+                        <tr>
+                            <td>{props.payAgreement.totalAmountDue}</td>
+                            <td>{props.payAgreement.totalAmountAccepted}</td>
+                            <td>{props.payAgreement.totalAmountScheduled}</td>
+                            <td>{props.payAgreement.totalAmountPaid}</td>
+                        </tr>
                     </tbody>
                 </table>
                 {listOrderItems()}

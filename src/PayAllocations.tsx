@@ -1,12 +1,12 @@
-import React, {useCallback, useContext, useEffect} from "react";
-import {PayAllocationBox, PayAllocationBoxWrapper} from "./PayAllocationBox";
-import {NewAllocation, PayAllocation} from "./model/PayAllocations";
-import {BackendSettingsContext} from "./BackendSettingsProvider";
-import {backendFetch, backendFetchYagna} from "./common/BackendCall";
-import {getYagnaServerById, YagnaServer} from "./common/BackendSettings";
+import React, { useCallback, useContext, useEffect } from "react";
+import { PayAllocationBox, PayAllocationBoxWrapper } from "./PayAllocationBox";
+import { NewAllocation, PayAllocation } from "./model/PayAllocations";
+import { BackendSettingsContext } from "./BackendSettingsProvider";
+import { backendFetch, backendFetchYagna } from "./common/BackendCall";
+import { getYagnaServerById, YagnaServer } from "./common/BackendSettings";
 import DateBox from "./DateBox";
-import "./PayAllocations.css"
-import {DateTime} from "luxon";
+import "./PayAllocations.css";
+import { DateTime } from "luxon";
 
 interface GetPayAllocationsResponse {
     payAllocations: PayAllocation[];
@@ -14,7 +14,7 @@ interface GetPayAllocationsResponse {
 
 const PayAllocations = () => {
     const [payAllocations, setPayAllocations] = React.useState<GetPayAllocationsResponse | null>(null);
-    const {backendSettings} = useContext(BackendSettingsContext);
+    const { backendSettings } = useContext(BackendSettingsContext);
 
     const [updateNo, setUpdateNo] = React.useState<number>(0);
     const loadPayAllocations = useCallback(async () => {
@@ -29,10 +29,12 @@ const PayAllocations = () => {
             payAllocations = payAllocations.concat(payAllocationsLoc);
         }
         //sort by timestamp
-        const payAllocationsSorted = payAllocations.sort((a: PayAllocation, b: PayAllocation) => {
-            return a.timestamp.localeCompare(b.timestamp);
-        }).reverse();
-        setPayAllocations({payAllocations: payAllocationsSorted});
+        const payAllocationsSorted = payAllocations
+            .sort((a: PayAllocation, b: PayAllocation) => {
+                return a.timestamp.localeCompare(b.timestamp);
+            })
+            .reverse();
+        setPayAllocations({ payAllocations: payAllocationsSorted });
     }, [updateNo]);
 
     function onDelete() {
@@ -40,8 +42,14 @@ const PayAllocations = () => {
     }
 
     function row(payAllocation: PayAllocation, i: number) {
-        return <PayAllocationBoxWrapper deletedEvent={() => onDelete()} key={i} payAllocationId={payAllocation.allocationId}
-                                             nodeId={payAllocation.yagnaServer.identity}/>;
+        return (
+            <PayAllocationBoxWrapper
+                deletedEvent={() => onDelete()}
+                key={i}
+                payAllocationId={payAllocation.allocationId}
+                nodeId={payAllocation.yagnaServer.identity}
+            />
+        );
     }
 
     const [enableNewAllocation, setEnableNewAllocation] = React.useState<boolean>(false);
@@ -83,12 +91,12 @@ const PayAllocations = () => {
             timeout: inputTimeoutValidated,
             deposit: null,
             makeDeposit: false,
-            extendTimeout: null
-        }).then()
+            extendTimeout: null,
+        }).then();
     }
     const [inputValue, setInputValue] = React.useState<string>("10.0");
     const [inputPlatform, setInputPlatform] = React.useState<string>("erc20-holesky-tglm");
-    const [inputTimeout, setInputTimeout] = React.useState<string>(DateTime.now().plus({hour: 1}).toISO());
+    const [inputTimeout, setInputTimeout] = React.useState<string>(DateTime.now().plus({ hour: 1 }).toISO());
 
     const [inputValueValidated, setInputValueValidated] = React.useState<string>("");
     const [inputPlatformValidated, setInputPlatformValidated] = React.useState<string>("");
@@ -100,58 +108,68 @@ const PayAllocations = () => {
         setInputTimeoutValidated(inputTimeout);
     }, [inputValue, inputPlatform, inputTimeout]);
 
-
     const [selectedYaServer, setSelectedYaServer] = React.useState<number>(0);
     useEffect(() => {
         loadPayAllocations().then();
     }, [loadPayAllocations, updateNo]);
     return (
         <div>
-            {enableNewAllocation && <div className={"new-allocation"}>
-                <h3>Create new</h3>
-                <div className={"new-allocation-entry"}>
-                    <div>Server</div>
-                    <div>
-                        <select onChange={e => setSelectedYaServer(parseInt(e.target.value))}>
-                            {backendSettings.yagnaServers.map((server, i) =>
-                                <option key={i} value={i}>{server.name}({server.identity})</option>
-                            )}
-                        </select>
+            {enableNewAllocation && (
+                <div className={"new-allocation"}>
+                    <h3>Create new</h3>
+                    <div className={"new-allocation-entry"}>
+                        <div>Server</div>
+                        <div>
+                            <select onChange={(e) => setSelectedYaServer(parseInt(e.target.value))}>
+                                {backendSettings.yagnaServers.map((server, i) => (
+                                    <option key={i} value={i}>
+                                        {server.name}({server.identity})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
+                    <div className={"new-allocation-entry"}>
+                        <div>GLM value:</div>
+                        <div>
+                            <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+                        </div>
+                        <div> {inputValueValidated} GLM</div>
+                    </div>
+                    <div className={"new-allocation-entry"}>
+                        <div>
+                            Payment <br />
+                            platform:
+                        </div>
+                        <div>
+                            <input value={inputPlatform} onChange={(e) => setInputPlatform(e.target.value)} />
+                        </div>
+                        <div> {inputPlatformValidated}</div>
+                    </div>
+                    <div className={"new-allocation-entry"}>
+                        <div>Timeout:</div>
+                        <div>
+                            <input value={inputTimeout} onChange={(e) => setInputTimeout(e.target.value)} />
+                        </div>
+                        <div>
+                            <DateBox date={inputTimeoutValidated} title={""} />
+                        </div>
+                    </div>
+                    <button disabled={inProgress} onClick={(e) => newAllocationClick()}>
+                        Submit new
+                    </button>
+                    <button disabled={inProgress} onClick={(e) => setEnableNewAllocation(false)}>
+                        Cancel
+                    </button>
                 </div>
-                <div className={"new-allocation-entry"}>
-                    <div>GLM value:</div>
-                    <div>
-                        <input value={inputValue} onChange={e => setInputValue(e.target.value)}/>
-                    </div>
-                    <div> {inputValueValidated} GLM</div>
+            )}
+            {!enableNewAllocation && (
+                <div className={"new-allocation"}>
+                    <button onClick={(_) => setEnableNewAllocation(true)}>New Allocation</button>
                 </div>
-                <div className={"new-allocation-entry"}>
-                    <div>Payment <br/>platform:</div>
-                    <div>
-                        <input value={inputPlatform} onChange={e => setInputPlatform(e.target.value)}/>
-                    </div>
-                    <div> {inputPlatformValidated}</div>
-                </div>
-                <div className={"new-allocation-entry"}>
-                    <div>Timeout:</div>
-                    <div>
-                        <input value={inputTimeout} onChange={e => setInputTimeout(e.target.value)}/>
-                    </div>
-                    <div>
-                        <DateBox date={inputTimeoutValidated} title={""}/>
-                    </div>
-                </div>
-                <button disabled={inProgress} onClick={e => newAllocationClick()}>Submit new</button>
-                <button disabled={inProgress} onClick={e => setEnableNewAllocation(false)}>Cancel</button>
-            </div>}
-            {!enableNewAllocation && <div className={"new-allocation"}>
-                <button onClick={_ => setEnableNewAllocation(true)}>New Allocation</button>
-            </div>}
+            )}
             {error && <div className="error-message">{error}</div>}
-            <div className={"pay-allocations-row-container"}>
-                {payAllocations?.payAllocations.map(row)}
-            </div>
+            <div className={"pay-allocations-row-container"}>{payAllocations?.payAllocations.map(row)}</div>
             {/*JSON.stringify(payAllocations)*/}
         </div>
     );

@@ -1,5 +1,5 @@
-import BackendSettings, {YagnaServer} from "./BackendSettings";
-import {YagnaIdentity, YagnaVersion} from "../model/YagnaVersion";
+import BackendSettings, { YagnaServer } from "./BackendSettings";
+import { YagnaIdentity, YagnaVersion } from "../model/YagnaVersion";
 
 interface BackendFetch {
     method?: string;
@@ -34,7 +34,7 @@ export async function getYangaServerInfo(backendSettings: YagnaServerConnInfo): 
     }
     return {
         name: identity.name,
-            identity: identity.identity,
+        identity: identity.identity,
         role: identity.role,
         version: version.version,
         url: backendSettings.url,
@@ -42,10 +42,14 @@ export async function getYangaServerInfo(backendSettings: YagnaServerConnInfo): 
         enabled: true,
         lastConnected: new Date().toISOString(),
         lastError: null,
-    }
+    };
 }
 
-export function backendFetchYagna(yagnaServer: YagnaServerConnInfo, uri: string, params?: BackendFetch): Promise<Response> {
+export function backendFetchYagna(
+    yagnaServer: YagnaServerConnInfo,
+    uri: string,
+    params?: BackendFetch,
+): Promise<Response> {
     const headers = params?.headers ?? new Headers();
     const method = params?.method ?? "GET";
     const body = params?.body;
@@ -95,7 +99,7 @@ export function backendFetch(backendSettings: BackendSettings, uri: string, para
         throw new Error("Uri must start with /");
     }
 
-        headers.append("Authorization", "Bearer " + settings.appKey);
+    headers.append("Authorization", "Bearer " + settings.appKey);
     if (body) {
         headers.append("Content-Type", "application/json");
     }

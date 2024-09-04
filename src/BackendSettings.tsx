@@ -1,8 +1,8 @@
-import React, {useContext, useEffect} from "react";
+import React, { useContext, useEffect } from "react";
 import "./BackendSettings.css";
-import {BackendSettingsContext} from "./BackendSettingsProvider";
-import {getYangaServerInfo} from "./common/BackendCall";
-import {YagnaServer} from "./common/BackendSettings";
+import { BackendSettingsContext } from "./BackendSettingsProvider";
+import { getYangaServerInfo } from "./common/BackendCall";
+import { YagnaServer } from "./common/BackendSettings";
 import DateBox from "./DateBox";
 
 interface YagnaServerNodeProps {
@@ -10,54 +10,57 @@ interface YagnaServerNodeProps {
 }
 
 const YagnaServerNode = (props: YagnaServerNodeProps) => {
-    return <table className="yagna-node-table">
-        <tbody>
-        <tr>
-            <th>Node Id:</th>
-            <td>{props.server.identity}</td>
-        </tr>
-        <tr>
-            <th>Key name</th>
-            <td>{props.server.name}</td>
-        </tr>
-        <tr>
-            <th>Key role</th>
-            <td>{props.server.role}</td>
-        </tr>
-        <tr>
-            <th>Node version</th>
-            <td>{props.server.version}</td>
-        </tr>
-        <tr>
-            <th>Url</th>
-            <td>{props.server.url}</td>
-        </tr>
-        <tr>
-            <th>AppKey</th>
-            <td>{props.server.appKey}</td>
-        </tr>
-        <tr>
-            <th>Enabled</th>
-            <td>{props.server.enabled ? "active" : "inactive"}</td>
-        </tr>
-        <tr>
-            <th>Last connected</th>
-            <td><DateBox date={props.server.lastConnected} title=""/></td>
-        </tr>
-        <tr>
-            <th>Last error</th>
+    return (
+        <table className="yagna-node-table">
+            <tbody>
+                <tr>
+                    <th>Node Id:</th>
+                    <td>{props.server.identity}</td>
+                </tr>
+                <tr>
+                    <th>Key name</th>
+                    <td>{props.server.name}</td>
+                </tr>
+                <tr>
+                    <th>Key role</th>
+                    <td>{props.server.role}</td>
+                </tr>
+                <tr>
+                    <th>Node version</th>
+                    <td>{props.server.version}</td>
+                </tr>
+                <tr>
+                    <th>Url</th>
+                    <td>{props.server.url}</td>
+                </tr>
+                <tr>
+                    <th>AppKey</th>
+                    <td>{props.server.appKey}</td>
+                </tr>
+                <tr>
+                    <th>Enabled</th>
+                    <td>{props.server.enabled ? "active" : "inactive"}</td>
+                </tr>
+                <tr>
+                    <th>Last connected</th>
+                    <td>
+                        <DateBox date={props.server.lastConnected} title="" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Last error</th>
 
-            <td style={{color: "red"}}>{props.server.lastError &&
-                <DateBox date={props.server.lastError} title=""/>}</td>
-        </tr>
-
-
-        </tbody>
-    </table>
-}
+                    <td style={{ color: "red" }}>
+                        {props.server.lastError && <DateBox date={props.server.lastError} title="" />}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    );
+};
 
 const BackendSettingsBox = () => {
-    const {backendSettings, setBackendSettings, resetSettings} = useContext(BackendSettingsContext);
+    const { backendSettings, setBackendSettings, resetSettings } = useContext(BackendSettingsContext);
 
     const [backendUrl, setBackendUrl] = React.useState("");
     const backendChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +78,6 @@ const BackendSettingsBox = () => {
 
     const [updateToken, setUpdateToken] = React.useState(0);
 
-
     const [checkInProgress, setCheckInProgress] = React.useState(false);
     const [checkSuccessful, setCheckSuccessful] = React.useState(false);
     const [checkResponse, setCheckResponse] = React.useState("");
@@ -90,7 +92,7 @@ const BackendSettingsBox = () => {
         setCheckResponse(`Connecting to ${backendUrl} ...`);
         setCheckInProgress(true);
         setCheckSuccessful(false);
-        setCheckData(null)
+        setCheckData(null);
         setCheckError("");
         try {
             const server = await getYangaServerInfo(settingsToCheck);
@@ -103,18 +105,16 @@ const BackendSettingsBox = () => {
             setCheckError(`Failed to connect to ${backendUrl}`);
             setCheckInProgress(false);
         }
-
     };
 
     const checkAll = async () => {
-
         const checkedServers = [];
         for (const server of backendSettings.yagnaServers) {
             try {
                 const updateServer = await getYangaServerInfo(server);
                 checkedServers.push(updateServer);
             } catch (e) {
-                server.lastError = (new Date()).toISOString();
+                server.lastError = new Date().toISOString();
                 checkedServers.push(server);
             }
         }
@@ -136,7 +136,10 @@ const BackendSettingsBox = () => {
         const newSettings = backendSettings;
 
         for (let i = 0; i < newSettings.yagnaServers.length; i++) {
-            if (newSettings.yagnaServers[i].identity === checkData.identity && newSettings.yagnaServers[i].appKey === checkData.appKey) {
+            if (
+                newSettings.yagnaServers[i].identity === checkData.identity &&
+                newSettings.yagnaServers[i].appKey === checkData.appKey
+            ) {
                 setCheckError("Server with specified identity and app-key already added");
                 return;
             }
@@ -145,8 +148,7 @@ const BackendSettingsBox = () => {
         setCheckSuccessful(false);
         setBackendSettings(newSettings);
         setUpdateToken(updateToken + 1);
-    }
-
+    };
 
     const resetToDefault = () => {
         resetSettings();
@@ -156,24 +158,26 @@ const BackendSettingsBox = () => {
         return () => {
             const newSettings = backendSettings;
             for (const [server_no, server] of newSettings.yagnaServers.entries()) {
-
                 if (server_no === no) {
                     if (server_no === 0) {
                         window.alert("Main server is already set");
                         return;
                     }
-                    [newSettings.yagnaServers[server_no - 1], newSettings.yagnaServers[server_no]] = [newSettings.yagnaServers[server_no], newSettings.yagnaServers[server_no - 1]];
+                    [newSettings.yagnaServers[server_no - 1], newSettings.yagnaServers[server_no]] = [
+                        newSettings.yagnaServers[server_no],
+                        newSettings.yagnaServers[server_no - 1],
+                    ];
                     setBackendSettings(newSettings);
                     setUpdateToken(updateToken + 1);
                     return;
                 }
             }
-        }
+        };
     }
     function checkConnection(id: string, appKey: string, url: string) {
         return () => {
             window.alert("Not implemented yet");
-        }
+        };
     }
 
     function forgetConnection(id: string, appKey: string, url: string) {
@@ -192,7 +196,7 @@ const BackendSettingsBox = () => {
             newSettings.yagnaServers = retainElements;
             setBackendSettings(newSettings);
             setUpdateToken(updateToken + 1);
-        }
+        };
     }
 
     const backendList = () => {
@@ -201,10 +205,10 @@ const BackendSettingsBox = () => {
                 <h1>Connected yagna servers:</h1>
 
                 <div>
-                    {backendSettings.yagnaServers.map((server, i) =>
+                    {backendSettings.yagnaServers.map((server, i) => (
                         <div key={i} className="yagna-server-entry">
                             <h3>No {i}</h3>
-                            <YagnaServerNode server={server}/>
+                            <YagnaServerNode server={server} />
                             <div className="yagna-server-entry-button-list">
                                 <button disabled={i == 0} onClick={moveUp(i)}>
                                     Move up
@@ -217,51 +221,44 @@ const BackendSettingsBox = () => {
                                 </button>
                             </div>
                         </div>
-                    )}
+                    ))}
                 </div>
-
             </div>
         );
-    }
+    };
 
     return (
         <div className={"backend-settings"}>
             <div>Backend settings</div>
-            <hr/>
+            <hr />
             <div>{checkResponse}</div>
             <div className="backend-check-error">{checkError}</div>
 
+            {checkSuccessful && checkData && <YagnaServerNode server={checkData} />}
 
-            {checkSuccessful && checkData && (
-                <YagnaServerNode
-                    server={checkData}
-                />)
-            }
-
-            <input type="button" value="Check All" onClick={checkAll}/>
+            <input type="button" value="Check All" onClick={checkAll} />
             {backendList()}
             <h3>Backend URL:</h3>
-            <input type="text" value={backendUrl} onChange={backendChanged}/>
-            <hr/>
+            <input type="text" value={backendUrl} onChange={backendChanged} />
+            <hr />
             <h3>Backend security:</h3>
             <p>
-                <span style={{fontWeight: "bold"}}>Bearer authentication</span> - token is added to bearer header
+                <span style={{ fontWeight: "bold" }}>Bearer authentication</span> - token is added to bearer header
                 value. When using Yagna backend it is appkey
             </p>
             <div>
                 <label>
-                    <input type="checkbox" checked={enableBearerToken} onChange={bearerEnabledChanged}/>
+                    <input type="checkbox" checked={enableBearerToken} onChange={bearerEnabledChanged} />
                     Enabled
                 </label>
             </div>
-            <input type="text" value={bearerToken} onChange={bearerChanged} disabled={!enableBearerToken}/>
-            <hr/>
+            <input type="text" value={bearerToken} onChange={bearerChanged} disabled={!enableBearerToken} />
+            <hr />
 
             <div className="box-line">
-
-                <input type="button" value="Check" onClick={check} disabled={checkInProgress}/>
-                <input type="button" value="Add" onClick={saveAndAdd} disabled={!checkSuccessful}/>
-                <input type="button" value="Reset to default" onClick={resetToDefault}/>
+                <input type="button" value="Check" onClick={check} disabled={checkInProgress} />
+                <input type="button" value="Add" onClick={saveAndAdd} disabled={!checkSuccessful} />
+                <input type="button" value="Reset to default" onClick={resetToDefault} />
             </div>
         </div>
     );
