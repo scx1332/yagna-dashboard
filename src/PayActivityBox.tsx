@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import "./PayActivityBox.css";
 import PayActivity from "./model/PayActivity";
-import { backendFetch, backendFetchYagna } from "./common/BackendCall";
+import { backendFetchYagna } from "./common/BackendCall";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import DebitNote from "./model/DebitNote";
 import Invoice from "./model/Invoice";

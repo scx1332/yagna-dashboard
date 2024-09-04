@@ -1,6 +1,5 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import "./PayBatchOrderBox.css";
-import DateBox from "./DateBox";
 import { BatchOrder, BatchOrderItem, BatchOrderItemDocument } from "./model/Batch";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import { backendFetch } from "./common/BackendCall";
@@ -45,14 +44,8 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                         backendSettings,
                         `/payment-api/v1/batchOrders/${props.batchOrder.id}/items/${entries[i].batchOrderItem.payeeAddr}/details`,
                     );
-                    const response_json = await response.json();
-                    entries[i].details = response_json;
+                    entries[i].details = await response.json();
                 }
-                const response = await backendFetch(
-                    backendSettings,
-                    `/payment-api/v1/batchOrders/${props.batchOrder.id}/items`,
-                );
-                const response_json = await response.json();
             }
             setBatchOrderItems({ orderItemEntries: entries });
         }

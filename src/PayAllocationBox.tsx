@@ -139,7 +139,7 @@ export const PayAllocationBoxWrapper = (props: PayAllocationBoxWrapperProps) => 
                     <button disabled={requestExtended} onClick={(_) => setRequestExtended(true)}>
                         Change
                     </button>
-                    <button onClick={(e) => releaseAllocationClick()}>Release</button>
+                    <button onClick={(_e) => releaseAllocationClick()}>Release</button>
                 </div>
             </div>
             {requestExtended && (

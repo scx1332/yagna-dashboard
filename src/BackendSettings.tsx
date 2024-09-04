@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import "./BackendSettings.css";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import { getYangaServerInfo } from "./common/BackendCall";
@@ -124,11 +124,6 @@ const BackendSettingsBox = () => {
         setUpdateToken(updateToken + 1);
     };
 
-    const cancelChanges = () => {
-        setBackendUrl("");
-        setBearerToken("");
-        setEnableBearerToken(true);
-    };
     const saveAndAdd = () => {
         if (checkData === null) {
             return;
@@ -157,7 +152,7 @@ const BackendSettingsBox = () => {
     function moveUp(no: number) {
         return () => {
             const newSettings = backendSettings;
-            for (const [server_no, server] of newSettings.yagnaServers.entries()) {
+            for (const [server_no, _server] of newSettings.yagnaServers.entries()) {
                 if (server_no === no) {
                     if (server_no === 0) {
                         window.alert("Main server is already set");

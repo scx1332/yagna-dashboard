@@ -1,9 +1,9 @@
 import React, { useCallback, useContext, useEffect } from "react";
-import { PayAllocationBox, PayAllocationBoxWrapper } from "./PayAllocationBox";
+import { PayAllocationBoxWrapper } from "./PayAllocationBox";
 import { NewAllocation, PayAllocation } from "./model/PayAllocations";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
-import { backendFetch, backendFetchYagna } from "./common/BackendCall";
-import { getYagnaServerById, YagnaServer } from "./common/BackendSettings";
+import { backendFetchYagna } from "./common/BackendCall";
+import { YagnaServer } from "./common/BackendSettings";
 import DateBox from "./DateBox";
 import "./PayAllocations.css";
 import { DateTime } from "luxon";
@@ -155,10 +155,10 @@ const PayAllocations = () => {
                             <DateBox date={inputTimeoutValidated} title={""} />
                         </div>
                     </div>
-                    <button disabled={inProgress} onClick={(e) => newAllocationClick()}>
+                    <button disabled={inProgress} onClick={(_e) => newAllocationClick()}>
                         Submit new
                     </button>
-                    <button disabled={inProgress} onClick={(e) => setEnableNewAllocation(false)}>
+                    <button disabled={inProgress} onClick={(_e) => setEnableNewAllocation(false)}>
                         Cancel
                     </button>
                 </div>
