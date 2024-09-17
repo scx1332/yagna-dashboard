@@ -3,11 +3,12 @@ import "./AgreementIdBox.css";
 
 interface AgreementIdBoxProps {
     agreementId: string;
+    ownerId: string;
 }
-function render(agreementId: string, shortAgreementId: string) {
+function render(agreementId: string, ownerId: string, shortAgreementId: string) {
     return (
         <span title={agreementId}>
-            <a href={`payAgreements/${agreementId}`}>{shortAgreementId}</a>
+            <a href={`payAgreement?ownerId=${ownerId}&agreementId=${agreementId}`}>{shortAgreementId}</a>
         </span>
     );
 }
@@ -15,7 +16,7 @@ function render(agreementId: string, shortAgreementId: string) {
 const AgreementIdBox = (props: AgreementIdBoxProps) => {
     const shortAgreementId = props.agreementId.substring(0, 8);
 
-    return render(props.agreementId, shortAgreementId);
+    return render(props.agreementId, props.ownerId, shortAgreementId);
 };
 
 export default AgreementIdBox;

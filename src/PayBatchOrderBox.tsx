@@ -97,7 +97,7 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                                             <td>{batchOrderItemEntry.batchOrderItem.paymentId}</td>
                                             <td>{batchOrderItemEntry.batchOrderItem.paid}</td>
                                             <td>
-                                                <AgreementIdBox agreementId={detail.agreement_id} />
+                                                <AgreementIdBox ownerId={detail.owner_id} agreementId={detail.agreement_id} />
                                             </td>
                                             <td>
                                                 <ActivityIdBox activityId={detail.activity_id} />

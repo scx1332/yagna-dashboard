@@ -3,6 +3,8 @@ import PayAgreementBox from "./PayAgreementBox";
 import PayAgreement from "./model/PayAgreement";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import { backendFetchYagna } from "./common/BackendCall";
+import AgreementIdBox from "./AgreementIdBox";
+import DateBox from "./DateBox";
 
 interface GetPayAgreementsResponse {
     payAgreements: PayAgreement[];
@@ -29,19 +31,47 @@ const PayAgreements = () => {
         setPayAgreements({ payAgreements: payAgreementsSorted });
     }, []);
 
-    function row(payAgreement: PayAgreement, i: number) {
-        return <PayAgreementBox loadOrderItems={true} loadActivities={true} key={i} agreementId={payAgreement.id} ownerId={payAgreement.ownerId} />;
-    }
 
     useEffect(() => {
         loadPayAgreements().then();
     }, [loadPayAgreements]);
+
+
+
     return (
         <div>
             <h1>PayAgreements</h1>
 
 
-            {payAgreements?.payAgreements.map(row)}
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Role</th>
+                    <th>Owner</th>
+                    <th>Accepted amount</th>
+                    <th>Scheduled amount</th>
+                    <th>Paid amount</th>
+
+                    <th>Created Timestamp</th>
+                    <th>Created</th>
+                </tr>
+                </thead>
+                <tbody>
+                {payAgreements?.payAgreements.map((agreement: PayAgreement) => (
+                    <tr key={agreement.id}>
+                        <td><AgreementIdBox agreementId={agreement.id} ownerId={agreement.ownerId}/></td>
+                        <td>{agreement.role}</td>
+                        <td>{agreement.ownerId}</td>
+                        <td>{agreement.totalAmountAccepted}</td>
+                        <td>{agreement.totalAmountScheduled}</td>
+                        <td>{agreement.totalAmountPaid}</td>
+                        <td><DateBox date={agreement.updatedTs} title={""}/></td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+
             {JSON.stringify(payAgreements)}
         </div>
     );

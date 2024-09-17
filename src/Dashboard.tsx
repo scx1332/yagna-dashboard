@@ -4,6 +4,7 @@ import "./Dashboard.css";
 import { Routes, Route, Link } from "react-router-dom";
 import BackendSettings from "./BackendSettings";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
+import PayAgreementSingle from "./PayAgreement";
 import PayAgreements from "./PayAgreements";
 import PayActivities from "./PayActivities";
 import BatchOrders from "./PayBatchOrders";
@@ -53,8 +54,10 @@ const Dashboard = () => {
                     <Route path="cycles" element={<PayCycles />} />
                     <Route path="batchOrders" element={<BatchOrders />} />
                     <Route path="payPayments" element={<PayPayments />} />
+                    <Route path="payAgreement" element={<PayAgreementSingle />} />
                     <Route path="payAgreements" element={<PayAgreements />} />
                     <Route path="payActivities" element={<PayActivities />} />
+
                     <Route path="backendSettings" element={<BackendSettings />} />
                 </Routes>
             </div>
