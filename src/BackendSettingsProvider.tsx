@@ -28,6 +28,11 @@ interface BackendSettingsProviderProps {
     children: React.ReactNode;
 }
 
+export const useConfig = () => {
+    const { backendSettings } = React.useContext(BackendSettingsContext);
+    return [backendSettings];
+}
+
 export const BackendSettingsProvider = (props: BackendSettingsProviderProps) => {
     const yagnaServers = JSON.parse(window.localStorage.getItem("yagnaServers") ?? "[]");
 

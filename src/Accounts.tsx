@@ -3,7 +3,7 @@ import AccountBox from "./AccountBox";
 import SenderAccounts from "./model/SenderAccounts";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import { backendFetch } from "./common/BackendCall";
-import { useConfig } from "./YagnaVersionProvider";
+import { useConfig } from "./ConfigProvider";
 import CreateTransferBox from "./CreateTransferBox";
 import CurrentBalanceBox from "./CurrentBalanceBox";
 import EventBox from "./EventBox";

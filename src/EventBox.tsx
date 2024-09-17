@@ -48,6 +48,7 @@ const EventBox = (_props: EventBoxProps) => {
     const { backendSettings } = useContext(BackendSettingsContext);
     const [events, setEvents] = React.useState<BalanceEvent[]>([]);
 
+    /*
     useWebSocket(backendSettings.backendUrl.replace("http://", "ws://") + "/event_stream", {
         onOpen: () => {
             console.log("WebSocket connection established.");
@@ -62,7 +63,7 @@ const EventBox = (_props: EventBoxProps) => {
         onClose: () => {
             console.log("WebSocket connection closed.");
         },
-    });
+    });*/
 
     const row = (tx: BalanceEvent) => {
         if (tx && tx.content && tx.content.transactionStuck) {

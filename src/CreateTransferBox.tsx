@@ -4,7 +4,7 @@ import "./CreateTransferBox.css";
 import { ethers } from "ethers";
 import { backendFetch } from "./common/BackendCall";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
-import { useConfig } from "./YagnaVersionProvider";
+import { useConfig } from "./ConfigProvider";
 import ContractDetails from "./ContractDetails";
 import { DateTime } from "luxon";
 

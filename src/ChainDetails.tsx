@@ -1,5 +1,5 @@
 import React from "react";
-import { useConfig } from "./YagnaVersionProvider";
+import { useConfig } from "./ConfigProvider";
 import ChainSetup from "./model/ChainSetup";
 import { FiExternalLink } from "react-icons/fi";
 import "./ChainDetails.css";

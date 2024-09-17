@@ -5,7 +5,7 @@ import AccountBalance from "./model/AccountBalance";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import DateBox from "./DateBox";
 import { ethers } from "ethers";
-import { useConfig } from "./YagnaVersionProvider";
+import { useConfig } from "./ConfigProvider";
 
 interface CurrentBalanceBoxProps {
     selectedChain: string | null;
