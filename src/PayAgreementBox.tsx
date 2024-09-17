@@ -5,9 +5,12 @@ import { backendFetch, backendFetchYagna } from "./common/BackendCall";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import PayActivity from "./model/PayActivity";
 import PayActivityBox from "./PayActivityBox";
+import {Simulate} from "react-dom/test-utils";
+import {BigNumber} from "bignumber.js";
 
-interface PayAgreementBoxProps {
-    payAgreement: PayAgreement;
+interface PayAgreementBoxProps2 {
+    agreementId: string;
+    ownerId: string;
     loadActivities: boolean;
     loadOrderItems: boolean;
 }
@@ -20,22 +23,39 @@ interface GetOrderItemsResponse {
     orderItems: any;
 }
 
-const PayAgreementBox = (props: PayAgreementBoxProps) => {
+const PayAgreementBox = (props: PayAgreementBoxProps2) => {
     const { backendSettings } = useContext(BackendSettingsContext);
     //const [config] =
     //if (props.payAgreement == null) {
     //    return <div>Unknown payAgreement</div>;
     //}
 
+
+    const [reloadCounter, setReloadCounter] = React.useState<number>(0);
+    const [agreement, setAgreement] = React.useState<PayAgreement | null>(null);
+
+    const loadAgreement = useCallback(async () => {
+        const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.ownerId);
+
+        if (yagnaServer) {
+            const response = await backendFetchYagna(
+                yagnaServer,
+                `/payment-api/v1/payAgreements/${props.agreementId}`,
+            );
+            const response_json = await response.json();
+            setAgreement(response_json);
+        }
+    }, [props.agreementId, props.ownerId]);
+
     const [activities, setActivities] = React.useState<GetActivitiesResponse | null>(null);
     const loadActivities = useCallback(async () => {
         if (props.loadActivities) {
-            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.payAgreement.ownerId);
+            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.ownerId);
 
             if (yagnaServer) {
                 const response = await backendFetchYagna(
                     yagnaServer,
-                    `/payment-api/v1/payAgreements/${props.payAgreement.id}/activities`,
+                    `/payment-api/v1/payAgreements/${props.agreementId}/activities`,
                 );
                 const response_json = await response.json();
                 setActivities({ activities: response_json });
@@ -48,7 +68,7 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
         if (props.loadOrderItems) {
             const response = await backendFetch(
                 backendSettings,
-                `/payment-api/v1/payAgreements/${props.payAgreement.id}/orders`,
+                `/payment-api/v1/payAgreements/${props.agreementId}/orders`,
             );
             const response_json = await response.json();
             setAgreementOrderItems({ orderItems: response_json });
@@ -56,8 +76,8 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
     }, [props.loadOrderItems]);
 
     useEffect(() => {
-        Promise.all([loadActivities(), loadAgreementOrderItems()]).then();
-    }, [loadActivities, loadAgreementOrderItems]);
+        Promise.all([loadActivities(), loadAgreementOrderItems(), loadAgreement()]).then();
+    }, [loadActivities, loadAgreementOrderItems, loadAgreement, reloadCounter]);
 
     const listActivities = () => {
         if (activities == null) {
@@ -76,7 +96,8 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
                                 loadOrderItems={true}
                                 loadDebitNotes={true}
                                 loadActivityState={true}
-                                payActivity={activity}
+                                activityId={activity.id}
+                                ownerId={props.ownerId}
                             />
                         </div>
                     ))}
@@ -92,36 +113,47 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
         if (agreementOrderItems.orderItems.length === 0) {
             return <div className="debit-note-list">No order items</div>;
         }
+        let orderItemSum = BigNumber(0);
+        for (const orderItem of agreementOrderItems.orderItems) {
+            orderItemSum = orderItemSum.plus(BigNumber(orderItem.amount));
+        }
         return (
             <div className="debit-note-list">
-                <div className="debit-note-list-title">Order items</div>
+                <div className="debit-note-list-title">Payment order items</div>
                 <table className="debit-note-list-table">
                     <thead>
-                        <tr>
-                            <th>Order id</th>
-                            <th>Owner id</th>
-                            <th>Payee address</th>
-                            <th>Amount</th>
-                            <th>Agreement id</th>
-                            <th>Invoice id</th>
-                            <th>Activity id</th>
-                            <th>Debit note id</th>
-                        </tr>
+                    <tr>
+                        <th>Order id</th>
+                        <th>Owner id</th>
+                        <th>Payee address</th>
+                        <th>Amount</th>
+                        <th>Agreement id</th>
+                        <th>Invoice id</th>
+                        <th>Activity id</th>
+                        <th>Debit note id</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        {agreementOrderItems.orderItems.map((orderItem: any, i: number) => (
-                            <tr key={i}>
-                                <td>{orderItem.order_id}</td>
-                                <td>{orderItem.owner_id}</td>
-                                <td>{orderItem.payee_addr}</td>
-                                <td>{orderItem.amount}</td>
-                                <td>{orderItem.agreement_id}</td>
-                                <td>{orderItem.invoice_id}</td>
-                                <td>{orderItem.activity_id}</td>
-                                <td>{orderItem.debit_note_id}</td>
-                            </tr>
-                        ))}
+                    {agreementOrderItems.orderItems.map((orderItem: any, i: number) => (
+                        <tr key={i}>
+                            <td>{orderItem.order_id}</td>
+                            <td>{orderItem.owner_id}</td>
+                            <td>{orderItem.payee_addr}</td>
+                            <td>{orderItem.amount}</td>
+                            <td>{orderItem.agreement_id}</td>
+                            <td>{orderItem.invoice_id}</td>
+                            <td>{orderItem.activity_id}</td>
+                            <td>{orderItem.debit_note_id}</td>
+                        </tr>
+                    ))}
                     </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colSpan={3}>Total</td>
+                        <td>{orderItemSum.toString()}</td>
+                        <td colSpan={4}></td>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
         );
@@ -130,25 +162,26 @@ const PayAgreementBox = (props: PayAgreementBoxProps) => {
     return (
         <div className={"pay-agreement-box"}>
             <div className={"pay-agreement-box-body"}>
-                <div className={"pay-agreement-id"}>PayAgreement no {props.payAgreement.id}</div>
-                <div className="pay-agreement-entry">Owner: {props.payAgreement.ownerId}</div>
+                <div className={"pay-agreement-id"}>PayAgreement no {props.agreementId}</div>
+                <div className="pay-agreement-entry">Owner: {props.ownerId}</div>
 
+                <button onClick={() => setReloadCounter(reloadCounter + 1)}>Reload</button>
                 <table className="pay-agreement-amount-table">
                     <thead>
-                        <tr>
-                            <th>Due</th>
-                            <th>Accepted</th>
-                            <th>Scheduled</th>
-                            <th>Paid</th>
-                        </tr>
+                    <tr>
+                        <th>Due</th>
+                        <th>Accepted</th>
+                        <th>Scheduled</th>
+                        <th>Paid</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>{props.payAgreement.totalAmountDue}</td>
-                            <td>{props.payAgreement.totalAmountAccepted}</td>
-                            <td>{props.payAgreement.totalAmountScheduled}</td>
-                            <td>{props.payAgreement.totalAmountPaid}</td>
-                        </tr>
+                    <tr>
+                        <td>{agreement?.totalAmountDue ?? "N/A"}</td>
+                        <td>{agreement?.totalAmountAccepted ?? "N/A"}</td>
+                        <td>{agreement?.totalAmountScheduled ?? "N/A"}</td>
+                        <td>{agreement?.totalAmountPaid ?? "N/A"}</td>
+                    </tr>
                     </tbody>
                 </table>
                 {listOrderItems()}

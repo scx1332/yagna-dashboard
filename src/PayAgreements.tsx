@@ -19,6 +19,7 @@ const PayAgreements = () => {
             const response_json = await response.json();
             const payAgreementsLoc = response_json;
             payAgreements = payAgreements.concat(payAgreementsLoc);
+            // add server information
         }
         const payAgreementsSorted = payAgreements
             .sort((a: PayAgreement, b: PayAgreement) => {
@@ -29,7 +30,7 @@ const PayAgreements = () => {
     }, []);
 
     function row(payAgreement: PayAgreement, i: number) {
-        return <PayAgreementBox loadOrderItems={true} loadActivities={true} key={i} payAgreement={payAgreement} />;
+        return <PayAgreementBox loadOrderItems={true} loadActivities={true} key={i} agreementId={payAgreement.id} ownerId={payAgreement.ownerId} />;
     }
 
     useEffect(() => {
@@ -38,6 +39,8 @@ const PayAgreements = () => {
     return (
         <div>
             <h1>PayAgreements</h1>
+
+
             {payAgreements?.payAgreements.map(row)}
             {JSON.stringify(payAgreements)}
         </div>

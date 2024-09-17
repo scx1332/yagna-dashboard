@@ -5,9 +5,11 @@ import { backendFetchYagna } from "./common/BackendCall";
 import { BackendSettingsContext } from "./BackendSettingsProvider";
 import DebitNote from "./model/DebitNote";
 import Invoice from "./model/Invoice";
+import {BigNumber} from "bignumber.js";
 
 interface PayActivityBoxProps {
-    payActivity: PayActivity;
+    activityId: string;
+    ownerId: string;
     loadDebitNotes: boolean;
     loadActivityState: boolean;
     loadOrderItems: boolean;
@@ -30,15 +32,29 @@ interface GetOrderItemsResponse {
 const PayActivityBox = (props: PayActivityBoxProps) => {
     const { backendSettings } = useContext(BackendSettingsContext);
 
+    const [activity, setActivity] = React.useState<PayActivity | null>(null);
+    const loadActivity = useCallback(async () => {
+        const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.ownerId);
+
+        if (yagnaServer) {
+            const response = await backendFetchYagna(
+                yagnaServer,
+                `/payment-api/v1/payActivities/${props.activityId}`,
+            );
+            const response_json = await response.json();
+            setActivity(response_json);
+        }
+    }, [props.activityId, props.ownerId]);
+
     const [debitNotes, setDebitNotes] = React.useState<GetDebitNotesResponse | null>(null);
     const loadDebitNotes = useCallback(async () => {
         if (props.loadDebitNotes) {
-            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.payActivity.ownerId);
+            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.ownerId);
 
             if (yagnaServer) {
                 const response = await backendFetchYagna(
                     yagnaServer,
-                    `/payment-api/v1/payActivities/${props.payActivity.id}/debitNotes`,
+                    `/payment-api/v1/payActivities/${props.activityId}/debitNotes`,
                 );
                 const response_json = await response.json();
                 setDebitNotes({ debitNotes: response_json });
@@ -48,12 +64,12 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
     const [invoice, setInvoice] = React.useState<GetInvoiceResponse | null>(null);
     const loadInvoice = useCallback(async () => {
         if (props.loadDebitNotes) {
-            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.payActivity.ownerId);
+            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.ownerId);
 
             if (yagnaServer) {
                 const response = await backendFetchYagna(
                     yagnaServer,
-                    `/payment-api/v1/payActivities/${props.payActivity.id}/invoice`,
+                    `/payment-api/v1/payActivities/${props.activityId}/invoice`,
                 );
                 const response_json = await response.json();
                 setInvoice({ invoice: response_json });
@@ -64,12 +80,12 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
     const [activityState, setActivityState] = React.useState<GetActivityStateResponse | null>(null);
     const loadActivityState = useCallback(async () => {
         if (props.loadActivityState) {
-            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.payActivity.ownerId);
+            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.ownerId);
 
             if (yagnaServer) {
                 const response = await backendFetchYagna(
                     yagnaServer,
-                    `/activity-api/v1/activity/${props.payActivity.id}/state`,
+                    `/activity-api/v1/activity/${props.activityId}/state`,
                 );
                 const response_json = await response.json();
                 setActivityState({ state: response_json });
@@ -80,12 +96,12 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
     const [activityOrderItems, setActivityOrderItems] = React.useState<GetOrderItemsResponse | null>(null);
     const loadActivityOrderItems = useCallback(async () => {
         if (props.loadOrderItems) {
-            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.payActivity.ownerId);
+            const yagnaServer = backendSettings.yagnaServers.find((ys) => ys.identity == props.ownerId);
 
             if (yagnaServer) {
                 const response = await backendFetchYagna(
                     yagnaServer,
-                    `/payment-api/v1/payActivities/${props.payActivity.id}/orders`,
+                    `/payment-api/v1/payActivities/${props.activityId}/orders`,
                 );
                 const response_json = await response.json();
                 setActivityOrderItems({ orderItems: response_json });
@@ -99,8 +115,8 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
         setInvoice(null);
         setActivityState(null);
         setActivityOrderItems(null);
-        Promise.all([loadDebitNotes(), loadInvoice(), loadActivityState(), loadActivityOrderItems()]).then();
-    }, [loadActivityState, loadInvoice, loadDebitNotes, loadActivityOrderItems, updateCounter]);
+        Promise.all([loadActivity(), loadDebitNotes(), loadInvoice(), loadActivityState(), loadActivityOrderItems()]).then();
+    }, [loadActivityState, loadActivity, loadInvoice, loadDebitNotes, loadActivityOrderItems, updateCounter]);
 
     const listDebitNotes = () => {
         if (debitNotes == null) {
@@ -109,6 +125,7 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
         if (debitNotes.debitNotes.length === 0) {
             return <div className="debit-note-list">No debit notes</div>;
         }
+
         return (
             <div className="debit-note-list">
                 <div className="debit-note-list-title">Debit notes</div>
@@ -149,6 +166,10 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
         if (activityOrderItems.orderItems.length === 0) {
             return <div className="debit-note-list">No order items</div>;
         }
+        let orderItemSum = BigNumber(0);
+        for (const orderItem of activityOrderItems.orderItems) {
+            orderItemSum = orderItemSum.plus(BigNumber(orderItem.amount));
+        }
         return (
             <div className="debit-note-list">
                 <div className="debit-note-list-title">Order items</div>
@@ -179,6 +200,13 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                             </tr>
                         ))}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colSpan={3}>Total</td>
+                            <td>{orderItemSum.toString()}</td>
+                            <td colSpan={4}></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         );
@@ -241,9 +269,9 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
             <button onClick={handleReloadButtonClick}>Reload</button>
             <div className={"pay-activity-box-body"}>
                 <div className={"pay-activity-id"}>
-                    Amounts for activity with id <b>{props.payActivity.id}</b> (Role: {props.payActivity.role}):
+                    Amounts for activity with id <b>{props.activityId}</b> (Role: {activity?.role || "unknown"}):
                 </div>
-                <div className="pay-activity-entry">Owner: {props.payActivity.ownerId}</div>
+                <div className="pay-activity-entry">Owner: {props.ownerId}</div>
 
                 <table className="pay-activity-amount-table">
                     <thead>
@@ -256,19 +284,19 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{props.payActivity.totalAmountDue}</td>
-                            <td>{props.payActivity.totalAmountAccepted}</td>
-                            <td>{props.payActivity.totalAmountScheduled}</td>
-                            <td>{props.payActivity.totalAmountPaid}</td>
+                            <td>{activity?.totalAmountDue ?? "N/A"}</td>
+                            <td>{activity?.totalAmountAccepted ?? "N/A"}</td>
+                            <td>{activity?.totalAmountScheduled ?? "N/A"}</td>
+                            <td>{activity?.totalAmountPaid ?? "N/A"}</td>
                         </tr>
                     </tbody>
                 </table>
                 {renderActivityState(activityState)}
 
-                <div className="pay-activity-entry">{`Agreement id: ${props.payActivity.agreementId}`}</div>
+                <div className="pay-activity-entry">{`Agreement id: ${activity?.agreementId ?? "N/A"}`}</div>
                 {renderInvoice(invoice)}
 
-                <div className="pay-activity-entry">{`Created at: ${props.payActivity.createdTs}`}</div>
+                <div className="pay-activity-entry">{`Created at: ${activity?.createdTs ?? "N/A"}`}</div>
 
                 {listOrderItems()}
 

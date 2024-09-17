@@ -35,7 +35,8 @@ const PayActivities = () => {
                 loadOrderItems={true}
                 loadDebitNotes={true}
                 key={i}
-                payActivity={payActivity}
+                ownerId={payActivity.ownerId}
+                activityId={payActivity.id}
             />
         );
     }
