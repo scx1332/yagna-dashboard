@@ -1,0 +1,18 @@
+table.pay-agreements-table {
+    border-collapse: collapse;
+    margin-left: 10px;
+}
+table.pay-agreements-table th {
+    text-align: left;
+    padding: 5px;
+    border: 1px solid #e0e0e0;
+}
+table.pay-agreements-table td {
+    min-width: 10em;
+    padding: 5px;
+    border: 1px solid #e0e0e0;
+}
+.created-ts-cell {
+    padding: 0.4em !important;
+    line-height: 1.5em !important;
+}

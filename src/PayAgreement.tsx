@@ -1,12 +1,5 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React from "react";
 import PayAgreementBox from "./PayAgreementBox";
-import PayAgreement from "./model/PayAgreement";
-import { BackendSettingsContext } from "./BackendSettingsProvider";
-import { backendFetchYagna } from "./common/BackendCall";
-
-interface GetPayAgreementsResponse {
-    payAgreements: PayAgreement[];
-}
 
 const PayAgreementSingle = () => {
     const params = new URLSearchParams(window.location.search);
