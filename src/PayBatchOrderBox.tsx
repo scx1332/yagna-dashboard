@@ -72,6 +72,7 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                             <th>Payee Addr</th>
                             <th>Amount</th>
                             <th>Driver payment ID</th>
+                            <th>Allocation ID</th>
                             <th>Is paid</th>
                             <th>Agreement</th>
                             <th>Activity</th>
@@ -86,6 +87,7 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                                         <b>{batchOrderItemEntry.batchOrderItem.amount}</b>
                                     </td>
                                     <td>{batchOrderItemEntry.batchOrderItem.paymentId}</td>
+                                    <td>{batchOrderItemEntry.batchOrderItem.allocationId}</td>
                                     <td>{batchOrderItemEntry.batchOrderItem.paid ? "paid" : "not paid"}</td>
                                 </tr>
 
@@ -95,12 +97,14 @@ const BatchOrderBox = (props: BatchOrderBoxProps) => {
                                             <td></td>
                                             <td>{detail.amount}</td>
                                             <td>{batchOrderItemEntry.batchOrderItem.paymentId}</td>
+                                            <td>{batchOrderItemEntry.batchOrderItem.allocationId}</td>
                                             <td>{batchOrderItemEntry.batchOrderItem.paid}</td>
                                             <td>
-                                                <AgreementIdBox ownerId={detail.owner_id} agreementId={detail.agreement_id} />
+                                                <AgreementIdBox ownerId={detail.ownerId}
+                                                                agreementId={detail.agreementId}/>
                                             </td>
                                             <td>
-                                                <ActivityIdBox activityId={detail.activity_id} />
+                                                <ActivityIdBox activityId={detail.activityId}/>
                                             </td>
                                         </tr>
                                     ))}

@@ -8,6 +8,7 @@ import DateBox from "./DateBox";
 import "./PayAgreements.css";
 import {DataGrid, GridCellParams, GridColDef, GridRowModel} from '@mui/x-data-grid';
 import {styled, TableCell} from "@mui/material";
+import {BigNumber} from "bignumber.js";
 
 interface GetPayAgreementsResponse {
     payAgreements: PayAgreement[];
@@ -40,18 +41,27 @@ const columns: GridColDef[] = [
         type: 'string',
         headerName: 'Amount accepted',
         width: 200,
+        sortComparator: (v1, v2, cellParams1, cellParams2) => {
+            return BigNumber(v1).comparedTo(BigNumber(v2));
+        }
     },
     {
         field: 'totalAmountScheduled',
         type: 'string',
         headerName: 'Amount scheduled',
         width: 200,
+        sortComparator: (v1, v2, cellParams1, cellParams2) => {
+            return BigNumber(v1).comparedTo(BigNumber(v2));
+        }
     },
     {
         field: 'totalAmountPaid',
         type: 'string',
         headerName: 'Amount paid',
         width: 200,
+        sortComparator: (v1, v2, cellParams1, cellParams2) => {
+            return BigNumber(v1).comparedTo(BigNumber(v2));
+        }
     },
     {
         field: 'createdTs',
