@@ -175,28 +175,28 @@ const PayActivityBox = (props: PayActivityBoxProps) => {
                 <div className="debit-note-list-title">Order items</div>
                 <table className="debit-note-list-table">
                     <thead>
-                        <tr>
-                            <th>Order id</th>
-                            <th>Owner id</th>
-                            <th>Payee address</th>
-                            <th>Amount</th>
-                            <th>Agreement id</th>
-                            <th>Invoice id</th>
-                            <th>Activity id</th>
-                            <th>Debit note id</th>
-                        </tr>
+                    <tr>
+                        <th>Order id</th>
+                        <th>Owner id</th>
+                        <th>Payee address</th>
+                        <th>Amount</th>
+                        <th>Allocation id</th>
+                        <th>Agreement id</th>
+                        <th>Activity id</th>
+                        <th>Debit note id</th>
+                    </tr>
                     </thead>
                     <tbody>
                         {activityOrderItems.orderItems.map((orderItem: any, i: number) => (
                             <tr key={i}>
-                                <td>{orderItem.order_id}</td>
-                                <td>{orderItem.owner_id}</td>
-                                <td>{orderItem.payee_addr}</td>
+                                <td>{orderItem.orderId}</td>
+                                <td>{orderItem.ownerId}</td>
+                                <td>{orderItem.payeeAddr}</td>
                                 <td>{orderItem.amount}</td>
-                                <td>{orderItem.agreement_id}</td>
-                                <td>{orderItem.invoice_id}</td>
-                                <td>{orderItem.activity_id}</td>
-                                <td>{orderItem.debit_note_id}</td>
+                                <td>{orderItem.allocationId}</td>
+                                <td>{orderItem.agreementId}</td>
+                                <td>{orderItem.activityId}</td>
+                                <td>{orderItem.debitNoteId}</td>
                             </tr>
                         ))}
                     </tbody>

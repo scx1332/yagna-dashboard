@@ -127,6 +127,7 @@ const PayAgreementBox = (props: PayAgreementBoxProps2) => {
                         <th>Owner id</th>
                         <th>Payee address</th>
                         <th>Amount</th>
+                        <th>Allocation id</th>
                         <th>Agreement id</th>
                         <th>Invoice id</th>
                         <th>Activity id</th>
@@ -136,14 +137,15 @@ const PayAgreementBox = (props: PayAgreementBoxProps2) => {
                     <tbody>
                     {agreementOrderItems.orderItems.map((orderItem: any, i: number) => (
                         <tr key={i}>
-                            <td>{orderItem.order_id}</td>
-                            <td>{orderItem.owner_id}</td>
-                            <td>{orderItem.payee_addr}</td>
+                            <td>{orderItem.orderId}</td>
+                            <td>{orderItem.ownerId}</td>
+                            <td>{orderItem.payeeAddr}</td>
                             <td>{orderItem.amount}</td>
-                            <td>{orderItem.agreement_id}</td>
-                            <td>{orderItem.invoice_id}</td>
-                            <td>{orderItem.activity_id}</td>
-                            <td>{orderItem.debit_note_id}</td>
+                            <td>{orderItem.allocationId}</td>
+                            <td>{orderItem.agreementId}</td>
+                            <td>{orderItem.invoiceId}</td>
+                            <td>{orderItem.activityId}</td>
+                            <td>{orderItem.debitNoteId}</td>
                         </tr>
                     ))}
                     </tbody>
@@ -151,7 +153,7 @@ const PayAgreementBox = (props: PayAgreementBoxProps2) => {
                     <tr>
                         <td colSpan={3}>Total</td>
                         <td>{orderItemSum.toString()}</td>
-                        <td colSpan={4}></td>
+                        <td colSpan={5}></td>
                     </tr>
                     </tfoot>
                 </table>
