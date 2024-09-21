@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {useCallback, useContext, useEffect, useLayoutEffect, useRef, useState} from "react";
 import PayAgreement from "./model/PayAgreement";
 import {backendFetchYagna, getYangaServerInfo} from "./common/BackendCall";
 import {YagnaVersion} from "./model/YagnaVersion";
@@ -6,6 +6,8 @@ import {Button, Fade, Input, TextField} from "@mui/material";
 import {YagnaServer} from "./common/BackendSettings";
 import ContractDetails from "./ContractDetails";
 import Paper from '@mui/material/Paper';
+import {BackendSettingsContext} from "./BackendSettingsProvider";
+import {redirect} from "react-router-dom";
 
 function useWindowSize() {
     const [size, setSize] = useState([0, 0]);
@@ -26,6 +28,8 @@ interface WelcomeScreenProps {
 }
 
 const WelcomeScreen = (props: WelcomeScreenProps) => {
+    const { backendSettings, setBackendSettings, resetSettings } = useContext(BackendSettingsContext);
+
     const [frameCount, setFrameCount] = useState<DOMHighResTimeStamp>(0); // State to track the current frame count
     const requestRef = useRef<number>();  // Holds the requestAnimationFrame id
     const previousTimeRef = useRef<DOMHighResTimeStamp>();  // Holds the previous timestamp
@@ -115,6 +119,28 @@ const WelcomeScreen = (props: WelcomeScreenProps) => {
         newHeight = targetY;
     }*/
 
+    const saveAndAdd = () => {
+        if (checkData === null) {
+            return;
+        }
+        const newSettings = backendSettings;
+
+        for (let i = 0; i < newSettings.yagnaServers.length; i++) {
+            if (
+                newSettings.yagnaServers[i].identity === checkData.identity &&
+                newSettings.yagnaServers[i].appKey === checkData.appKey
+            ) {
+                setCheckError("Server with specified identity and app-key already added");
+                return;
+            }
+        }
+        newSettings.yagnaServers.push(checkData);
+        setCheckSuccessful(false);
+        setBackendSettings(newSettings);
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    };
 
     currentWidth.current = newWidth;
     currentHeight.current = newHeight;
@@ -198,7 +224,7 @@ const WelcomeScreen = (props: WelcomeScreenProps) => {
 
                                 </div>
                                 <div>
-                                    <Button variant="outlined" className="welcome-box-button" style={{
+                                    <Button onClick={()=>saveAndAdd()} variant="outlined" className="welcome-box-button" style={{
                                         marginBottom: 10,
                                         fontSize: fontSizeSubTitleComputed * 0.7
                                     }}>APPLY AND CONTINUE
