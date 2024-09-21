@@ -11,13 +11,14 @@ import BatchOrders from "./PayBatchOrders";
 import PayCycles from "./PayCycles";
 import PayPayments from "./PayPayments";
 import PayAllocations from "./PayAllocations";
+import WelcomeScreen from "./WelcomeScreen";
 
 const Dashboard = () => {
     const { backendSettings } = useContext(BackendSettingsContext);
     if (backendSettings.yagnaServers.length == 0) {
         return (
             <div>
-                <BackendSettings />
+                <WelcomeScreen />
             </div>
         );
     }

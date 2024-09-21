@@ -39,3 +39,34 @@ a:hover {
 .error-message {
     color: red;
 }
+
+.welcome-box-title {
+    font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+    font-weight: 800;
+    letter-spacing: -0.9px;
+    font-variation-settings: normal;
+}
+.welcome-box-subtitle {
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 500;
+}
+.welcome-box-identity {
+    margin: 1em 1em 1em 1em;
+    align-items: start;
+    justify-content: space-between;
+    font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+    font-weight: normal !important;
+}
+.welcome-box-identity > div {
+    margin: 0.5em 0.5em 0.5em 0.5em;
+}
+.welcome-box-input {
+    font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+}
+.welcome-box-button {
+    font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+}
+.welcome-box-animation {
+    opacity: 0.4;
+}
+
