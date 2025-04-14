@@ -8,7 +8,7 @@
         "@emotion/styled": "^11.13.0",
         "@mui/material": "^6.1.0",
         "@mui/x-data-grid": "^7.17.0",
-        "bignumber.js": "^9.1.2",
+        "bignumber.js": "=9.1.2",
         "ethers": "^5.5",
         "luxon": "^3.0",
         "react": "^18.2",
